@@ -11,14 +11,28 @@ def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            # Guardar el usuario
             user = form.save(commit=False)
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
             user.email = form.cleaned_data.get('email')
             user.save()
-            messages.success(request, f"¡Bienvenido/a {user.username}! Tu cuenta ha sido creada con éxito.")
-            return redirect('home')
+
+            # 🔐 Autenticar al usuario
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')  # Usamos password1 porque es el campo original
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # 🔑 Iniciar sesión automáticamente
+                login(request, user)
+                messages.success(request, f"¡Bienvenido/a {user.username}! Tu cuenta ha sido creada e iniciada sesión con éxito.")
+                return redirect('home')
+            else:
+                messages.error(request, "Hubo un problema al iniciar sesión automáticamente. Intenta iniciar sesión manualmente.")
+                return redirect('login')
         else:
+            messages.error(request, "Error al registrarse. Por favor revisa los datos ingresados.")
             show_register_modal = True  
     else:
         form = RegisterForm()
