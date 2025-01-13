@@ -8,29 +8,30 @@
         <div class="modal-body">
 
           {% if messages %}
-          <div class="container mt-3">
-              {% for message in messages %}
-              <div class="alert 
-                  {% if message.tags == 'success' %}alert-success
-                  {% elif message.tags == 'error' %}alert-danger
-                  {% elif message.tags == 'warning' %}alert-warning
-                  {% elif message.tags == 'info' %}alert-info
-                  {% else %}alert-secondary{% endif %}
-                  alert-dismissible fade show" role="alert">
-                  {{ message }}
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-              {% endfor %}
-          </div>
+            <div class="container mt-3">
+                {% for message in messages %}
+                <div class="alert alert-dismissible fade show 
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} alert-danger
+                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} alert-warning
+                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %} alert-info
+                    {% else %} alert-secondary {% endif %}" 
+                    role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
           {% endif %}
+
           
           <form method="post" action="{% url 'login' %}">
             
             {% csrf_token %}
             <div class="mb-3">
-              <label for="id_username" class="form-label">Usuario</label>
-              <input type="text" name="username" class="form-control form-control-lg" id="id_username" placeholder="Usuario">
-            </div>
+              <label for="id_login_username" class="form-label">Usuario</label>
+              <input type="text" name="username" class="form-control form-control-lg" id="id_login_username" placeholder="Usuario">
+            </div>            
             <div class="mb-3">
               <label for="id_password" class="form-label">Contraseña</label>
               <input type="password" name="password" class="form-control form-control-lg" id="id_password" placeholder="Contraseña">

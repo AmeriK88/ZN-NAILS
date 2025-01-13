@@ -6,24 +6,21 @@
   <!-- Mensaje -->
   {% if messages %}
     <div class="container mt-3">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-12">
-                {% for message in messages %}
-                    <div class="alert 
-                  {% if message.tags == 'success' %}alert-success
-                  {% elif message.tags == 'error' %}alert-danger
-                  {% elif message.tags == 'warning' %}alert-warning
-                  {% elif message.tags == 'info' %}alert-info
-                  {% else %}alert-secondary{% endif %}
-                  alert-dismissible fade show" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
+      {% for message in messages %}
+        <div class="alert alert-dismissible fade show 
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} alert-danger
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} alert-warning
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %} alert-info
+            {% else %} alert-secondary {% endif %}" 
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+      {% endfor %}
     </div>
   {% endif %}
-    
+
   <h2 class="mb-4">Reserva tu cita para uñas</h2>
   <p class="lead mb-5">
     ¡Haz tu cita ahora para un servicio de uñas espectacular!
@@ -38,7 +35,7 @@
     <!-- Si NO está logueado, abre el modal de registro -->
     <button 
       id="registerBtn" 
-      class="btn btn-primary btn-lg" 
+      class="btn btn-outline-dark btn-lg" 
       type="button"
       data-bs-toggle="modal" 
       data-bs-target="#registerModal">
