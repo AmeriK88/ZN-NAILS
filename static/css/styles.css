@@ -172,30 +172,4 @@ body {
   font-size: var(--texto-input);
 }
 
-/* Mensajes de éxito */
-body .alert-success {
-  background-color: var(--alert-success-bg) !important;
-  color: var(--alert-success-text) !important;
-  border: 1px solid var(--alert-success-border) !important;
-}
 
-/* Mensajes de advertencia */
-body .alert-warning {
-  background-color: var(--alert-warning-bg) !important;
-  color: var(--alert-warning-text) !important;
-  border: 1px solid var(--alert-warning-border) !important;
-}
-
-/* Mensajes de error */
-body .alert-danger {
-  background-color: var(--alert-danger-bg) !important;
-  color: var(--alert-danger-text) !important;
-  border: 1px solid var(--alert-danger-border) !important;
-}
-
-/* Mensajes informativos */
-body .alert-info {
-  background-color: var(--alert-info-bg) !important;
-  color: var(--alert-info-text) !important;
-  border: 1px solid var(--alert-info-border) !important;
-}
