@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header text-white text-center gradiente-header">
+          <h4>📅 Reserva tu Cita</h4>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- Servicio -->
+            <div class="mb-3">
+              <label for="id_service" class="form-label">💅 Servicio</label>
+              {{ form.service|add_class:"form-select form-select-lg" }}
+            </div>
+
+            <!-- Fecha -->
+            <div class="mb-3">
+              <label for="id_date" class="form-label">📆 Fecha</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                {{ form.date|add_class:"form-control form-control-lg" }}
+              </div>
+            </div>
+
+            <!-- Hora -->
+            <div class="mb-3">
+              <label for="id_time" class="form-label">⏰ Hora</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                {{ form.time|add_class:"form-control form-control-lg" }}
+              </div>
+            </div>
+
+            <!-- Botón Mejorado -->
+            <button type="submit" class="btn btn-reservar btn-lg w-100">
+              ✨ Reservar Ahora
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

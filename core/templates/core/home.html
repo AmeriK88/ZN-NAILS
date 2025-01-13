@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="py-5 text-center">
+  <!-- Mensaje -->
+  {% if messages %}
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-12">
+                {% for message in messages %}
+                    <div class="alert 
+                  {% if message.tags == 'success' %}alert-success
+                  {% elif message.tags == 'error' %}alert-danger
+                  {% elif message.tags == 'warning' %}alert-warning
+                  {% elif message.tags == 'info' %}alert-info
+                  {% else %}alert-secondary{% endif %}
+                  alert-dismissible fade show" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+  {% endif %}
+    
+  <h2 class="mb-4">Reserva tu cita para uñas</h2>
+  <p class="lead mb-5">
+    ¡Haz tu cita ahora para un servicio de uñas espectacular!
+  </p>
+
+  {% if user.is_authenticated %}
+    <!-- Si está logueado, lo enviamos a reservar cita -->
+    <a href="{% url 'book_appointment' %}" class="btn btn-outline-dark btn-lg">
+      ¡Reserva Ahora!
+    </a>
+  {% else %}
+    <!-- Si NO está logueado, abre el modal de registro -->
+    <button 
+      id="registerBtn" 
+      class="btn btn-primary btn-lg" 
+      type="button"
+      data-bs-toggle="modal" 
+      data-bs-target="#registerModal">
+      ¡Reserva Ahora!
+    </button>
+  {% endif %}
+</div>
+
+{% endblock %}

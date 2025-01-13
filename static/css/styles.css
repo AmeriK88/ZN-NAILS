@@ -1,0 +1,203 @@
+/*  Variables actualizadas */
+:root {
+  /*  Colores */
+  --color-principal: #2b72adc0;
+  --color-secundario: #f8f9fa;
+  --color-fondo: #f7f7f7;
+  --color-texto: #212529;
+  --color-hover: #8ab6e9;
+  --color-boton: #343a40;
+  --color-boton-hover: #2b72adc0;
+  --gradiente-header: radial-gradient(circle, #2b72adc0 0%, #8aabd6 100%);
+
+  /*  Tipografía */
+  --fuente-principal: 'Poppins', sans-serif;
+  --fuente-secundaria: Arial, sans-serif;
+
+  /*  Espaciados */
+  --espaciado-padding: 0.5rem 1.25rem;
+  --radio-bordes: 1.875rem;
+
+  /*  Modales */
+  --modal-ancho: 37.5rem;  
+  --modal-padding: 1.25rem; 
+
+  /*  Tamaños de fuente */
+  --titulo-modal: 1.8rem;
+  --texto-input: 1.2rem;
+
+   /*  Mensajes de éxito */
+   --alert-success-bg: #d4edda;
+   --alert-success-text: #155724;
+   --alert-success-border: #c3e6cb;
+ 
+   /*  Mensajes de advertencia */
+   --alert-warning-bg: #fff3cd;
+   --alert-warning-text: #856404;
+   --alert-warning-border: #ffeeba;
+ 
+   /*  Mensajes de error */
+   --alert-danger-bg: #f8d7da;
+   --alert-danger-text: #721c24;
+   --alert-danger-border: #f5c6cb;
+ 
+   /* ℹ️ Mensajes informativos */
+   --alert-info-bg: #d1ecf1;
+   --alert-info-text: #0c5460;
+   --alert-info-border: #bee5eb;
+}
+
+/* Estilo general */
+body {
+  font-family: var(--fuente-secundaria);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-size: 1rem; /* Base */
+}
+
+/* Barra superior */
+.bg-light {
+  background-color: var(--color-secundario) !important;
+}
+
+.navbar-brand {
+  font-family: var(--fuente-principal);
+  letter-spacing: 0.063rem;
+}
+
+/*  Enlaces */
+.nav-link {
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+}
+
+.nav-link:hover {
+  color: var(--color-principal) !important;
+}
+
+/*  Botón del menú alineado a la derecha */
+.navbar-toggler {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  border: 0.125rem solid var(--color-boton); 
+  border-radius: 50%;
+  padding: calc(var(--espaciado-padding) / 2);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1050;
+  margin-left: 0.625rem; 
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); 
+}
+
+/*  Hover suave */
+.navbar-toggler:hover {
+  background-color: var(--color-hover);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2); 
+  transform: scale(1.1);
+}
+
+/*  Ajuste para pantallas pequeñas */
+@media (max-width: 48rem) { 
+  .navbar-toggler {
+    margin-left: 0.313rem; 
+  }
+}
+
+/* Gradiente para el encabezado de la tarjeta */
+.gradiente-header {
+  background: var(--gradiente-header) !important; 
+  color: var(--color-fondo);  
+  padding: 1rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+
+/*  Botón de Reserva */
+.btn-reservar {
+  background: var(--gradiente-header);
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 3.125rem; 
+  padding: 0.75rem 1.25rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+}
+
+.btn-reservar:hover {
+  transform: translateY(-0.188rem) scale(1.07); 
+  box-shadow: 0 0.75rem 1.875rem rgba(0, 0, 0, 0.3), 0 0.375rem 1.25rem rgba(0, 0, 0, 0.15);
+  background: var(--gradiente-header);
+}
+
+/*  Botones generales */
+.btn-dark, .btn-outline-dark {
+  border-radius: var(--radio-bordes);
+  padding: var(--espaciado-padding);
+  background-color: var(--color-boton);
+  color: white;
+  border: none;
+}
+
+.btn-dark:hover, .btn-outline-dark:hover {
+  background-color: var(--color-boton-hover);
+  border-color: var(--color-boton-hover);
+}
+
+
+/*  Modales */
+.modal-dialog {
+  max-width: var(--modal-ancho);
+}
+
+.modal-content {
+  padding: var(--modal-padding);
+  border-radius: 0.938rem; 
+}
+
+.modal-header .modal-title {
+  font-size: var(--titulo-modal);
+  font-weight: bold;
+}
+
+.modal-body input {
+  font-size: var(--texto-input);
+  padding: 0.625rem; 
+}
+
+.btn-lg {
+  padding: 0.75rem;
+  font-size: var(--texto-input);
+}
+
+/* Mensajes de éxito */
+.alert-success {
+  background-color: var(--alert-success-bg) !important;
+  color: var(--alert-success-text) !important;
+  border-color: var(--alert-success-border) !important;
+}
+
+/* Mensajes de advertencia */
+.alert-warning {
+  background-color: var(--alert-warning-bg) !important;
+  color: var(--alert-warning-text) !important;
+  border-color: var(--alert-warning-border) !important;
+}
+
+/* Mensajes de error */
+.alert-danger {
+  background-color: var(--alert-danger-bg) !important;
+  color: var(--alert-danger-text) !important;
+  border-color: var(--alert-danger-border) !important;
+}
+
+/* Mensajes informativos */
+.alert-info {
+  background-color: var(--alert-info-bg) !important;
+  color: var(--alert-info-text) !important;
+  border-color: var(--alert-info-border) !important;
+}
+

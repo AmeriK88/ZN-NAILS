@@ -1,0 +1,86 @@
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-4" id="registerModalLabel">Registrarse</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" action="{% url 'register' %}">
+          <!-- Mensajes UI -->
+          {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+          
+          {% csrf_token %}
+
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="id_first_name" class="form-label">Nombre</label>
+            <input type="text" name="first_name" class="form-control form-control-lg {% if form.first_name.errors %}is-invalid{% endif %}" id="id_first_name" placeholder="Nombre">
+            {% for error in form.first_name.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Apellidos -->
+          <div class="mb-3">
+            <label for="id_last_name" class="form-label">Apellidos</label>
+            <input type="text" name="last_name" class="form-control form-control-lg {% if form.last_name.errors %}is-invalid{% endif %}" id="id_last_name" placeholder="Apellidos">
+            {% for error in form.last_name.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Usuario -->
+          <div class="mb-3">
+            <label for="id_username" class="form-label">Usuario</label>
+            <input type="text" name="username" class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}" id="id_username" placeholder="Usuario">
+            {% for error in form.username.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Correo Electrónico -->
+          <div class="mb-3">
+            <label for="id_email" class="form-label">Correo Electrónico</label>
+            <input type="email" name="email" class="form-control form-control-lg {% if form.email.errors %}is-invalid{% endif %}" id="id_email" placeholder="Correo Electrónico">
+            {% for error in form.email.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="id_password1" class="form-label">Contraseña</label>
+            <input type="password" name="password1" class="form-control form-control-lg {% if form.password1.errors %}is-invalid{% endif %}" id="id_password1" placeholder="Contraseña">
+            {% for error in form.password1.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Confirmar Contraseña -->
+          <div class="mb-3">
+            <label for="id_password2" class="form-label">Confirmar Contraseña</label>
+            <input type="password" name="password2" class="form-control form-control-lg {% if form.password2.errors %}is-invalid{% endif %}" id="id_password2" placeholder="Confirmar Contraseña">
+            {% for error in form.password2.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+
+          <!-- Botón de Registro -->
+          <button type="submit" class="btn btn-success btn-lg w-100">Registrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
