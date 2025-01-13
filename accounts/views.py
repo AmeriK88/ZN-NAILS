@@ -19,8 +19,7 @@ def register_view(request):
             messages.success(request, f"¡Bienvenido/a {user.username}! Tu cuenta ha sido creada con éxito.")
             return redirect('home')
         else:
-            # ❌ Eliminado: messages.error() ya no es necesario
-            show_register_modal = True  # Se mantiene para reabrir el modal
+            show_register_modal = True  
     else:
         form = RegisterForm()
 
@@ -39,8 +38,7 @@ def login_view(request):
             messages.success(request, f"¡Bienvenido de nuevo, {user.username}!")
             return redirect('home')
         else:
-            # ❌ Eliminado: messages.error() ya no es necesario
-            show_login_modal = True  # Se mantiene para reabrir el modal
+            show_login_modal = True  
     else:
         form = LoginForm()
 

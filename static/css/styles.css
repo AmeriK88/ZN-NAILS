@@ -25,151 +25,139 @@
   --titulo-modal: 1.8rem;
   --texto-input: 1.2rem;
 
-   /*  Mensajes de éxito */
-   --alert-success-bg: #d4edda;
-   --alert-success-text: #155724;
-   --alert-success-border: #c3e6cb;
- 
-   /*  Mensajes de advertencia */
-   --alert-warning-bg: #fff3cd;
-   --alert-warning-text: #856404;
-   --alert-warning-border: #ffeeba;
- 
-   /*  Mensajes de error */
-   --alert-danger-bg: #f8d7da;
-   --alert-danger-text: #721c24;
-   --alert-danger-border: #f5c6cb;
- 
-   /* ℹ️ Mensajes informativos */
-   --alert-info-bg: #d1ecf1;
-   --alert-info-text: #0c5460;
-   --alert-info-border: #bee5eb;
+  /*  Mensajes de éxito */
+  --alert-success-bg: #d4edda;
+  --alert-success-text: #155724;
+  --alert-success-border: #c3e6cb;
+
+  /*  Mensajes de advertencia */
+  --alert-warning-bg: #fff3cd;
+  --alert-warning-text: #856404;
+  --alert-warning-border: #ffeeba;
+
+  /*  Mensajes de error */
+  --alert-danger-bg: #f8d7da;
+  --alert-danger-text: #721c24;
+  --alert-danger-border: #f5c6cb;
+
+  /*  Mensajes informativos */
+  --alert-info-bg: #d1ecf1;
+  --alert-info-text: #0c5460;
+  --alert-info-border: #bee5eb;
 }
 
-/* Estilo general */
+/*  Estilo general */
 body {
   font-family: var(--fuente-secundaria);
   background-color: var(--color-fondo);
   color: var(--color-texto);
-  font-size: 1rem; /* Base */
+  font-size: 1rem;
 }
 
-/* Barra superior */
-.bg-light {
-  background-color: var(--color-secundario) !important;
-}
-
-.navbar-brand {
-  font-family: var(--fuente-principal);
-  letter-spacing: 0.063rem;
-}
-
-/*  Enlaces */
-.nav-link {
-  font-weight: 500;
-  text-transform: uppercase;
-  padding: 0.5rem 1rem;
-}
-
-.nav-link:hover {
-  color: var(--color-principal) !important;
-}
-
-/*  Botón del menú alineado a la derecha */
-.navbar-toggler {
-  border: none;
-  outline: none;
-  background-color: transparent;
-  border: 0.125rem solid var(--color-boton); 
-  border-radius: 50%;
-  padding: calc(var(--espaciado-padding) / 2);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  z-index: 1050;
-  margin-left: 0.625rem; 
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1); 
-}
-
-/*  Hover suave */
-.navbar-toggler:hover {
-  background-color: var(--color-hover);
-  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2); 
-  transform: scale(1.1);
-}
-
-/*  Ajuste para pantallas pequeñas */
-@media (max-width: 48rem) { 
-  .navbar-toggler {
-    margin-left: 0.313rem; 
+/*  Animación de entrada para tarjetas */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Gradiente para el encabezado de la tarjeta */
+.card {
+  animation: slideIn 0.8s ease-in-out;
+}
+
+/*  Animación para mensajes de alerta */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-in-out forwards;
+}
+
+/*  Transiciones suaves en campos de formulario */
+.form-control,
+.form-select {
+  transition: all 0.3s ease-in-out;
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-principal);
+  box-shadow: 0 0 10px rgba(43, 114, 173, 0.4);
+  transform: scale(1.02);
+}
+
+/*  Gradiente para encabezados */
 .gradiente-header {
-  background: var(--gradiente-header) !important; 
-  color: var(--color-fondo);  
+  background: var(--gradiente-header) !important;
+  color: var(--color-fondo);
   padding: 1rem;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
 
-
-/*  Botón de Reserva */
+/*  Botón de Reserva mejorado */
 .btn-reservar {
   background: var(--gradiente-header);
   color: white;
   font-weight: bold;
   font-size: 1.2rem;
   border: none;
-  border-radius: 3.125rem; 
+  border-radius: 3.125rem;
   padding: 0.75rem 1.25rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
 }
 
 .btn-reservar:hover {
-  transform: translateY(-0.188rem) scale(1.07); 
-  box-shadow: 0 0.75rem 1.875rem rgba(0, 0, 0, 0.3), 0 0.375rem 1.25rem rgba(0, 0, 0, 0.15);
+  transform: translateY(-0.2rem) scale(1.07);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
   background: var(--gradiente-header);
 }
 
-/*  Botones generales */
-.btn-dark, .btn-outline-dark {
-  border-radius: var(--radio-bordes);
-  padding: var(--espaciado-padding);
-  background-color: var(--color-boton);
-  color: white;
+.btn-reservar:active {
+  transform: translateY(0);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.2);
+}
+
+/*  Botón del menú con efecto hover */
+.navbar-toggler {
   border: none;
+  outline: none;
+  background-color: transparent;
+  border: 2px solid var(--color-boton);
+  border-radius: 50%;
+  padding: calc(var(--espaciado-padding) / 2);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1050;
+  margin-left: 0.625rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
 }
 
-.btn-dark:hover, .btn-outline-dark:hover {
-  background-color: var(--color-boton-hover);
-  border-color: var(--color-boton-hover);
+.navbar-toggler:hover {
+  background-color: var(--color-hover);
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
 }
 
-
-/*  Modales */
-.modal-dialog {
-  max-width: var(--modal-ancho);
+/*  Ajuste para pantallas pequeñas */
+@media (max-width: 48rem) {
+  .navbar-toggler {
+    margin-left: 0.313rem;
+  }
 }
-
-.modal-content {
-  padding: var(--modal-padding);
-  border-radius: 0.938rem; 
-}
-
-.modal-header .modal-title {
-  font-size: var(--titulo-modal);
-  font-weight: bold;
-}
-
-.modal-body input {
-  font-size: var(--texto-input);
-  padding: 0.625rem; 
-}
-
-.btn-lg {
-  padding: 0.75rem;
-  font-size: var(--texto-input);
-}
-
-
