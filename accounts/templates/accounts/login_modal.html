@@ -7,24 +7,28 @@
         </div>
         <div class="modal-body">
 
-          {% if messages %}
+          {% if form.errors %}
             <div class="container mt-3">
-                {% for message in messages %}
-                <div class="alert alert-dismissible fade show 
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} alert-danger
-                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
-                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} alert-warning
-                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %} alert-info
-                    {% else %} alert-secondary {% endif %}" 
-                    role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            {{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {{ error }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 {% endfor %}
             </div>
           {% endif %}
 
-          
+
           <form method="post" action="{% url 'login' %}">
             
             {% csrf_token %}
