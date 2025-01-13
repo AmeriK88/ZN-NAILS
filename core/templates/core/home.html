@@ -3,24 +3,6 @@
 
 {% block content %}
 <div class="py-5 text-center">
-  <!-- Mensaje -->
-  {% if messages %}
-    <div class="container mt-3">
-      {% for message in messages %}
-        <div class="alert alert-dismissible fade show 
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} alert-danger
-            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %} alert-success
-            {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %} alert-warning
-            {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %} alert-info
-            {% else %} alert-secondary {% endif %}" 
-            role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-
   <h2 class="mb-4">Reserva tu cita para uñas</h2>
   <p class="lead mb-5">
     ¡Haz tu cita ahora para un servicio de uñas espectacular!

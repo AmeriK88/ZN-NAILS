@@ -2,13 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
-from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
-
-csrf_protect
+@csrf_protect
 def register_view(request):
-    show_register_modal = False  
+    show_register_modal = False
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -21,18 +19,17 @@ def register_view(request):
             messages.success(request, f"¡Bienvenido/a {user.username}! Tu cuenta ha sido creada con éxito.")
             return redirect('home')
         else:
-            messages.error(request, "Error al registrarse. Por favor revisa los datos ingresados.")
-            show_register_modal = True  
+            # ❌ Eliminado: messages.error() ya no es necesario
+            show_register_modal = True  # Se mantiene para reabrir el modal
     else:
         form = RegisterForm()
 
     return render(request, 'core/home.html', {'form': form, 'show_register_modal': show_register_modal})
 
 
-
 @csrf_protect
 def login_view(request):
-    show_login_modal = False  
+    show_login_modal = False
 
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -42,12 +39,13 @@ def login_view(request):
             messages.success(request, f"¡Bienvenido de nuevo, {user.username}!")
             return redirect('home')
         else:
-            messages.error(request, "Usuario o contraseña incorrectos.")
-            show_login_modal = True  
+            # ❌ Eliminado: messages.error() ya no es necesario
+            show_login_modal = True  # Se mantiene para reabrir el modal
     else:
         form = LoginForm()
 
     return render(request, 'core/home.html', {'form': form, 'show_login_modal': show_login_modal})
+
 
 def logout_view(request):
     logout(request)
