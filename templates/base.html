@@ -30,8 +30,8 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'imagenes/favicon.ico' %}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'imagenes/favicon.ico' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'imagenes/favicon.ico' %}?v=2">
+    <link rel="shortcut icon" href="{% static 'imagenes/favicon.ico' %}?v=2">    
 </head>
 <body>
     <!-- Barra Superior: Redes Sociales -->
@@ -40,7 +40,7 @@
             <!-- Redes Sociales -->
             <div>
                 <a href="#" class="text-dark me-3"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-dark me-3"><i class="bi bi-instagram"></i></a>
+                <a href="https://www.instagram.com/zemar.nails/" class="text-dark me-3"><i class="bi bi-instagram"></i></a>
                 <a href="#" class="text-dark me-3"><i class="bi bi-tiktok"></i></a>
                 <a href="#" class="text-dark me-3"><i class="bi bi-pinterest"></i></a>
             </div>
@@ -100,7 +100,7 @@
     </nav>
 
     <!-- Contenido dinámico -->
-    <main class="container my-5">
+    <main class="container mb-5">
         <!-- Mensaje -->
         {% if messages %}
             <div class="container mt-3">

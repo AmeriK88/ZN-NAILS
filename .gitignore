@@ -40,4 +40,7 @@ dist/
 .cache/
 .pytest_cache/
 
+# Imágenes
+static/imagenes/
+
 
