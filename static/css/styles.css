@@ -275,21 +275,23 @@ body {
 
 /*  Slogan sobre las imágenes */
 .banner-slogan {
-  background-color: var(--color-overlay);
+  background-color: rgba(0, 0, 0, 0.4); 
   border-radius: var(--radio-bordes);
   padding: var(--espaciado-medio) var(--espaciado-grande);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);  
   animation: fadeInUp 1.2s ease-out;
 }
 
 .banner-slogan h2 {
   font-size: var(--fuente-grande);
   color: var(--color-secundario);
-  text-shadow: 2px 2px 5px var(--color-sombra-texto);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9); /* Más profundidad */
 }
 
 .banner-slogan p {
   font-size: var(--fuente-mediana);
   color: var(--color-secundario);
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
 }
 
 /* ✨ Animación de aparición del slogan */

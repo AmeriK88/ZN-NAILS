@@ -19,6 +19,11 @@
             <div class="mb-3">
               <label for="id_service" class="form-label">💅 Servicio</label>
               {{ form.service|add_class:"form-select form-select-lg" }}
+              {% if form.service.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.service.errors.as_text }}
+                </div>
+              {% endif %}
             </div>
 
             <!-- Fecha -->
@@ -28,6 +33,11 @@
                 <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
                 {{ form.date|add_class:"form-control form-control-lg" }}
               </div>
+              {% if form.date.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.date.errors.as_text }}
+                </div>
+              {% endif %}
             </div>
 
             <!-- Hora -->
@@ -37,6 +47,11 @@
                 <span class="input-group-text"><i class="bi bi-clock"></i></span>
                 {{ form.time|add_class:"form-control form-control-lg" }}
               </div>
+              {% if form.time.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.time.errors.as_text }}
+                </div>
+              {% endif %}
             </div>
 
             <!-- Botón Mejorado -->
@@ -44,6 +59,7 @@
               ✨ Reservar Ahora
             </button>
           </form>
+
         </div>
       </div>
     </div>

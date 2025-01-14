@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">Nuestros Servicios</h2>
+  <div class="row">
+    {% for servicio in servicios %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ servicio.nombre }}</h5>
+            <p class="card-text">{{ servicio.descripcion }}</p>
+            <p class="card-text"><strong>Precio:</strong> {{ servicio.precio }} €</p>
+            <p class="card-text"><strong>Duración:</strong> {{ servicio.duracion }} min</p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No hay servicios disponibles.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

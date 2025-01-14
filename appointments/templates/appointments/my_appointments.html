@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">📅 Mis Citas</h2>
+
+  {% if appointments %}
+    <div class="row">
+      {% for appointment in appointments %}
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-header gradiente-header text-white">
+                <h5>{{ appointment.service.nombre }}</h5>
+              </div>
+              <div class="card-body">
+                <p><strong>Descripción:</strong> {{ appointment.service.descripcion }}</p>
+                <p><strong>Precio:</strong> €{{ appointment.service.precio }}</p>
+                <p><strong>Duración:</strong> {{ appointment.service.duracion }} minutos</p>
+                <p><strong>Fecha:</strong> {{ appointment.date }}</p>
+                <p><strong>Hora:</strong> {{ appointment.time }}</p>
+                {% if appointment.service.imagen %}
+                  <img src="{{ appointment.service.imagen.url }}" class="img-fluid mt-2" alt="{{ appointment.service.nombre }}">
+                {% endif %}
+              </div>              
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center" role="alert">
+      No tienes citas registradas. ¡Reserva tu primera cita ahora! 💅
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

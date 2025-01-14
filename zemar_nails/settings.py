@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'core',
     'accounts',
     'appointments',
+    'services',
     'widget_tweaks',
 ]
 
