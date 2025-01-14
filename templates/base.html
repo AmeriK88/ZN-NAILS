@@ -85,11 +85,17 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarMenu">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_servicios' %}">Servicios</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Reseñas</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+            
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_appointments' %}">Mis Citas</a>
+                        </li>
+                    {% endif %}
                 </ul>
-            </div>
+            </div>            
         </div>
     </nav>
 

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">💅 Nuestros Servicios</h2>
+
+  {% if servicios %}
+    <div class="row">
+      {% for servicio in servicios %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            {% if servicio.imagen %}
+              <img src="{{ servicio.imagen.url }}" class="card-img-top" alt="{{ servicio.nombre }}">
+            {% else %}
+              <img src="{% static 'imagenes/default_service.jpg' %}" class="card-img-top" alt="Servicio">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ servicio.nombre }}</h5>
+              <p class="card-text">{{ servicio.descripcion|truncatewords:20 }}</p>
+              <p><strong>Precio:</strong> €{{ servicio.precio }}</p>
+              <p><strong>Duración:</strong> {{ servicio.duracion }} minutos</p>
+              <a href="{% url 'book_appointment' %}?service_id={{ servicio.id }}" class="btn btn-reservar btn-sm">
+                ¡Reserva Ahora!
+              </a>              
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      No hay servicios disponibles por el momento.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
