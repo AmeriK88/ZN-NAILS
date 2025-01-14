@@ -5,6 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2b72adc0">
+    <!-- Open Graph (Para Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:title" content="Zemar Nails - Belleza y Estilo">
+    <meta property="og:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
+    <meta property="og:image" content="{% static 'imagenes/logo.png' %}">
+    <meta property="og:url" content="https://tusitio.com">
+    <!-- <meta property="og:type" content="website"> -->
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zemar Nails - Belleza y Estilo">
+    <meta name="twitter:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
+    <meta name="twitter:image" content="{% static 'imagenes/preview.png' %}">
     <title>Zemar Nails</title>
 
     <!-- Bootstrap CSS -->
@@ -16,6 +29,9 @@
     <!-- Estilos personalizados (deben ir DESPUÉS) -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'imagenes/favicon.ico' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'imagenes/favicon.ico' %}">
 </head>
 <body>
     <!-- Barra Superior: Redes Sociales -->
@@ -31,7 +47,7 @@
             
             <!-- Info adicional con efecto máquina de escribir -->
             <div class="small text-muted typing-effect">
-                Cada 5 sesiones ✨ | 1 GRATIS
+                Cada 10 sesiones ✨ | 1 GRATIS
             </div>
         </div>
     </div>
@@ -74,7 +90,6 @@
                     <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
                 </ul>
             </div>
-
         </div>
     </nav>
 

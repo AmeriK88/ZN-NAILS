@@ -2,28 +2,70 @@
 {% load static %}
 
 {% block content %}
-<div class="py-5 text-center">
-  <h2 class="mb-4">Reserva tu cita para uñas</h2>
-  <p class="lead mb-5">
-    ¡Haz tu cita ahora para un servicio de uñas espectacular!
-  </p>
+<!-- Carrusel estilo banner -->
+<div id="carouselServicios" class="carousel slide banner-carousel" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'imagenes/nails_8.jpeg' %}" class="d-block w-100" alt="Diseño de Uñas">
+      <div class="carousel-caption banner-slogan">
+        <h2>💅 Belleza en cada detalle</h2>
+        <p>Transforma tus uñas con diseños únicos y exclusivos.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'imagenes/nails_9.jpeg' %}" class="d-block w-100" alt="Manicura Profesional">
+      <div class="carousel-caption banner-slogan">
+        <h2>✨ Manicura Profesional</h2>
+        <p>Cuidado y estilo para lucir impecable.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'imagenes/nails_11.jpeg' %}" class="d-block w-100" alt="Tratamientos de Uñas">
+      <div class="carousel-caption banner-slogan">
+        <h2>🌸 Tratamientos de Uñas</h2>
+        <p>La mejor experiencia para tus manos.</p>
+      </div>
+    </div>
+  </div>
 
-  {% if user.is_authenticated %}
-    <!-- Si está logueado, lo enviamos a reservar cita -->
-    <a href="{% url 'book_appointment' %}" class="btn btn-outline-dark btn-lg">
-      ¡Reserva Ahora!
-    </a>
-  {% else %}
-    <!-- Si NO está logueado, abre el modal de registro -->
-    <button 
-      id="registerBtn" 
-      class="btn btn-outline-dark btn-lg" 
-      type="button"
-      data-bs-toggle="modal" 
-      data-bs-target="#registerModal">
-      ¡Reserva Ahora!
-    </button>
-  {% endif %}
+  <!-- Controles -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselServicios" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselServicios" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
 </div>
 
+<!-- Sección de llamada a la acción mejorada -->
+<div class="py-5 text-center">
+  <h2 class="mb-4 animated-text">Transforma tus uñas, destaca tu estilo</h2>
+  <p class="lead mb-4 animated-text">
+    Reserva ahora y disfruta de una experiencia única en cuidado de uñas.  
+    <strong>Diseños exclusivos</strong>, <strong>materiales de calidad</strong> y un trato personalizado.  
+  </p>
+
+  <!-- Contenedor centrado para el botón de reserva -->
+  <div class="m-5 d-flex justify-content-center align-items-center text-center mt-5">
+    {% if user.is_authenticated %}
+      <a href="{% url 'book_appointment' %}" class="btn btn-reservar btn-lg">
+         ¡Reserva tu cita ahora!
+      </a>
+    {% else %}
+      <button id="registerBtn" class="btn btn-reservar btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#registerModal">
+         ¡Reserva tu cita ahora!
+      </button>
+    {% endif %}
+  </div>
+
+  <!-- Testimonios con enlace a Booksy -->
+  <div class="testimonials animated-text">
+    <p>🌟 ¿Quieres conocer qué opinan nuestros clientes?</p>
+    <a href="https://booksy.com/es-es/106848_zemar-nails_salon-de-unas_70206_arrecife#ba_s=sgr_1" target="_blank" class="btn btn-outline-dark mt-3">
+      Ver Reseñas en Booksy
+    </a>
+  </div>
+</div>
 {% endblock %}

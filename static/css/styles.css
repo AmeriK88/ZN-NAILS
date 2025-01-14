@@ -14,8 +14,23 @@
   --fuente-secundaria: Arial, sans-serif;
 
   /*  Espaciados */
-  --espaciado-padding: 0.5rem 1.25rem;
-  --radio-bordes: 1.875rem;
+  --espaciado-pequeno: 0.5rem;
+  --espaciado-medio: 1rem;
+  --espaciado-grande: 2rem;
+
+  /*  Bordes */
+  --radio-bordes: 1.25rem;
+  --radio-bordes-banner: 1.25rem;
+
+  /*  Tipografía */
+  --fuente-grande: 2rem;
+  --fuente-mediana: 1.1rem;
+  --fuente-pequena: 1rem;
+  --fuente-hover: 1.2rem;
+
+  /*  Carrusel */
+  --altura-banner: 22rem;
+  --altura-banner-movil: 14rem;
 
   /*  Modales */
   --modal-ancho: 37.5rem;  
@@ -83,7 +98,7 @@ body {
 }
 
 /* Botones de Autenticación */
-#loginBtn, #registerBtn, .btn-outline-dark, .btn-dark, .nav-item {
+#loginBtn, .btn-outline-dark, .btn-dark, .nav-item {
   padding: 0.4rem 0.8rem; 
   font-size: 0.9rem;   
   border-radius: 1.25rem;  
@@ -93,7 +108,7 @@ body {
 
 /* Ajuste para pantallas pequeñas */
 @media (max-width: 768px) {
-  #loginBtn, #registerBtn, .btn-outline-dark, .btn-dark {
+  #loginBtn, .btn-outline-dark, .btn-dark {
     padding: 0.3rem 0.6rem; 
     font-size: 0.75rem;     
     margin-right: 0.3rem;    
@@ -146,24 +161,25 @@ body {
 /*  Botón de Reserva mejorado */
 .btn-reservar {
   background: var(--gradiente-header);
-  color: white;
+  color: var(--color-secundario);
   font-weight: bold;
-  font-size: 1.2rem;
-  border: none;
+  font-size: var(--fuente-mediana);
+  padding: var(--espaciado-pequeno) var(--espaciado-grande);
   border-radius: 3.125rem;
-  padding: 0.75rem 1.25rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  text-align: center;
+  border: none;
 }
 
 .btn-reservar:hover {
-  transform: translateY(-0.2rem) scale(1.07);
+  transform: scale(1.1);
   box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
-  background: var(--gradiente-header);
 }
 
 .btn-reservar:active {
-  transform: translateY(0);
+  transform: scale(1);
   box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.2);
 }
 
@@ -213,7 +229,7 @@ body {
 /*  Ajuste responsivo para pantallas pequeñas */
 @media (max-width: 768px) {
   .navbar-brand img {
-      width: 80px; 
+      width: 75px; 
   }
 }
 
@@ -249,7 +265,72 @@ body {
   }
 }
 
+/*  Carrusel estilo banner */
+.banner-carousel .carousel-item img {
+  height: var(--altura-banner);
+  object-fit: cover;
+  border-bottom-left-radius: var(--radio-bordes-banner);
+  border-bottom-right-radius: var(--radio-bordes-banner);
+}
 
+/*  Slogan sobre las imágenes */
+.banner-slogan {
+  background-color: var(--color-overlay);
+  border-radius: var(--radio-bordes);
+  padding: var(--espaciado-medio) var(--espaciado-grande);
+  animation: fadeInUp 1.2s ease-out;
+}
 
+.banner-slogan h2 {
+  font-size: var(--fuente-grande);
+  color: var(--color-secundario);
+  text-shadow: 2px 2px 5px var(--color-sombra-texto);
+}
 
+.banner-slogan p {
+  font-size: var(--fuente-mediana);
+  color: var(--color-secundario);
+}
 
+/* ✨ Animación de aparición del slogan */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🔲 Botón de Reserva */
+.btn-reservar {
+  background: var(--gradiente-header);
+  color: var(--color-secundario);
+  font-weight: bold;
+  font-size: var(--fuente-mediana);
+  padding: var(--espaciado-pequeno) var(--espaciado-grande);
+  border-radius: 50px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-reservar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
+}
+
+/* 📱 Ajustes responsivos */
+@media (max-width: 768px) {
+  .banner-carousel .carousel-item img {
+    height: var(--altura-banner-movil);
+  }
+
+  .banner-slogan h2 {
+    font-size: 1.5rem;
+  }
+
+  .banner-slogan p {
+    font-size: var(--fuente-pequena);
+  }
+}
