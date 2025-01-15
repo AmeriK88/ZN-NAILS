@@ -20,7 +20,7 @@ def register_view(request):
 
             # 🔐 Autenticar al usuario
             username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')  # Usamos password1 porque es el campo original
+            password = form.cleaned_data.get('password1')  
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
@@ -32,7 +32,6 @@ def register_view(request):
                 messages.error(request, "Hubo un problema al iniciar sesión automáticamente. Intenta iniciar sesión manualmente.")
                 return redirect('login')
         else:
-            messages.error(request, "Error al registrarse. Por favor revisa los datos ingresados.")
             show_register_modal = True  
     else:
         form = RegisterForm()
@@ -42,7 +41,7 @@ def register_view(request):
 
 @csrf_protect
 def login_view(request):
-    show_login_modal = False
+    show_login_modal = False  
 
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -50,13 +49,16 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f"¡Bienvenido de nuevo, {user.username}!")
-            return redirect('home')
+            return redirect('my_appointments')
         else:
-            show_login_modal = True  
+            show_login_modal = True 
     else:
         form = LoginForm()
 
-    return render(request, 'core/home.html', {'form': form, 'show_login_modal': show_login_modal})
+    return render(request, 'core/home.html', {
+        'form': form,
+        'show_login_modal': show_login_modal
+    })
 
 
 def logout_view(request):

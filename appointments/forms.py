@@ -52,6 +52,9 @@ class AppointmentForm(forms.ModelForm):
                 self.fields['time'].choices = self.get_available_times(service, selected_date)
             except (ValueError, Service.DoesNotExist):
                 self.fields['time'].choices = []
+        elif self.instance.pk:
+            # Si estamos editando, cargar los horarios del servicio existente
+            self.fields['time'].choices = self.get_available_times(self.instance.service, self.instance.date)
         else:
             self.fields['time'].choices = []
 
@@ -71,6 +74,20 @@ class AppointmentForm(forms.ModelForm):
             current_time += datetime.timedelta(minutes=step)
 
         return times
+    
+      #  MÉTODO DE VALIDACIÓN DE LA HORA
+    def clean_time(self):
+        time = self.cleaned_data.get('time')
+        service = self.cleaned_data.get('service')
+        date = self.cleaned_data.get('date')
+
+        if service and date:
+            available_times = [t[0] for t in self.get_available_times(service, date)]
+            
+            if time not in available_times:
+                raise forms.ValidationError("⚠️ La hora seleccionada no es válida. Elige otra disponible.")
+
+        return time
 
     def clean(self):
         cleaned_data = super().clean()

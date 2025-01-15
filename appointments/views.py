@@ -92,7 +92,7 @@ def load_available_times(request):
 
             start_time = datetime.time(9, 0)
             end_time = datetime.time(20, 0)
-            step = 15  # Intervalo de 15 minutos
+            step = service.duracion  # 🔥 Ajustar al tiempo del servicio
 
             times = []
             current_time = datetime.datetime.combine(selected_date, start_time)
@@ -101,11 +101,10 @@ def load_available_times(request):
                 hora_inicio = current_time
                 duracion_servicio = service.duracion
 
-                # Verificar si el horario está disponible
                 if verificar_disponibilidad(selected_date, hora_inicio, duracion_servicio):
                     times.append(current_time.time().strftime('%H:%M'))
 
-                current_time += datetime.timedelta(minutes=step)
+                current_time += datetime.timedelta(minutes=step)  # 🔥 Incrementar según el servicio
 
             return JsonResponse({'times': times})
 

@@ -9,6 +9,7 @@
       <div class="modal-body">
         <form method="post" action="{% url 'register' %}">
           <!-- Mensajes UI -->
+          {% csrf_token %}
           {% if form.errors %}
             <div class="container mt-3">
                 {% for field in form %}
@@ -30,8 +31,6 @@
             </div>
           {% endif %}
           
-          {% csrf_token %}
-
           <!-- Nombre -->
           <div class="mb-3">
             <label for="id_first_name" class="form-label">Nombre</label>
@@ -90,6 +89,7 @@
           <!-- Botón de Registro -->
           <button type="submit" class="btn btn-success btn-lg w-100">Registrar</button>
           <hr>
+          <p class="text-center">¿Ya tienes cuenta?</p>
           <!-- Botón para abrir el modal de inicio de sesión -->
           <a href="#" class="btn btn-secondary w-100 open-login-modal" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">🔑 Iniciar Sesión
           </a>

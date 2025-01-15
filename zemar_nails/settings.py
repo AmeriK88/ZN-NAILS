@@ -28,8 +28,6 @@ INSTALLED_APPS = [
     'appointments',
     'services',
     'widget_tweaks',
- 
-
 ]
 
 # Middleware

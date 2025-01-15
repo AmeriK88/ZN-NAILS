@@ -10,8 +10,8 @@
   --gradiente-header: radial-gradient(circle, #2b72adc0 0%, #8aabd6 100%);
 
   /*  Tipografía */
-  --fuente-principal: 'Poppins', sans-serif;
-  --fuente-secundaria: Arial, sans-serif;
+  --fuente-principal: Arial, sans-serif;
+  --fuente-secundaria: "Roboto Condensed", serif;
 
   /*  Espaciados */
   --espaciado-pequeno: 0.5rem;
@@ -93,7 +93,13 @@ body {
 
 .card {
   animation: slideIn 0.8s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 } 
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
 
 /*  Animación de entrada para tarjetas */
 @keyframes slideIn {
@@ -119,6 +125,51 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Texto degradado animado */
+.animated-text {
+  background: linear-gradient(90deg, #ff6ec4, #7873f5, #4ade80);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-move 3s linear infinite;
+}
+
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animación de aparición */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estado inicial (antes de aparecer) */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Estado final (cuando aparece) */
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 
 /* Botones de Autenticación */
 #loginBtn, .btn-outline-dark, .btn-dark, .nav-item {

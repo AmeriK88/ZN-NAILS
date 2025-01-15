@@ -22,9 +22,9 @@
               <p class="detail-box text-justify">{{ servicio.descripcion }}</p>
               <p class="detail-box"><strong>Precio:</strong> €{{ servicio.precio }}</p>
               <p class="detail-box"><strong>Duración:</strong> {{ servicio.duracion }} minutos</p>
-              <a href="#" 
-                class="btn btn-reservar btn-sm mt-auto {% if not user.is_authenticated %}open-register-modal{% endif %}"
-                {% if not user.is_authenticated %} data-bs-toggle="modal" data-bs-target="#registerModal" {% else %} href="{% url 'book_appointment' %}?service_id={{ servicio.id }}" {% endif %}>
+              <a href="{% if user.is_authenticated %}{% url 'book_appointment' %}?service_id={{ servicio.id }}{% else %}#{% endif %}" 
+                class="btn btn-reservar btn-sm mt-auto {% if not user.is_authenticated %}open-register-modal{% endif %}" 
+                {% if not user.is_authenticated %} data-bs-toggle="modal" data-bs-target="#registerModal" {% endif %}>
                 ¡Reserva Ahora!
               </a>
             </div>
