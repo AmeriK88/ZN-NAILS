@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm text-center">
+                <div class="card-header gradiente-header text-white">
+                    <h4>⚠️ Confirmar Eliminación</h4>
+                </div>
+                <div class="card-body">
+                    <p>¿Estás seguro de que deseas eliminar esta cita?</p>
+                    <p><strong>Servicio:</strong> {{ appointment.service.nombre }}</p>
+                    <p><strong>Fecha:</strong> {{ appointment.date }}</p>
+                    <p><strong>Hora:</strong> {{ appointment.time }}</p>
+
+                    <form method="post" action="{% url 'delete_appointment' appointment.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-lg">🗑️ Eliminar</button>
+                        <a href="{% url 'my_appointments' %}" class="btn btn-secondary btn-lg">❌ Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

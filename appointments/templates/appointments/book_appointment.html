@@ -54,6 +54,17 @@
               {% endif %}
             </div>
 
+            <!-- Comentario -->
+            <div class="mb-3">
+              <label for="id_comment" class="form-label">📝 Comentario</label>
+              {{ form.comment|add_class:"form-control form-control-lg" }}
+              {% if form.comment.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.comment.errors.as_text }}
+                </div>
+              {% endif %}
+            </div>
+
             <!-- Botón Mejorado -->
             <button type="submit" class="btn btn-reservar btn-lg w-100">
               ✨ Reservar Ahora

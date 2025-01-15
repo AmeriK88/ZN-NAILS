@@ -6,45 +6,80 @@
     <h2 class="text-center mb-4">📅 Mis Citas</h2>
 
     {% if appointments %}
-      <div class="row">
-          {% for appointment in appointments %}
-          <div class="col-md-6 mb-4">
-              <div class="card shadow-sm">
-              <div class="card-header gradiente-header text-white">
-                  <h5>{{ appointment.service.nombre }}</h5>
-                  </div>
-                  <div class="card-body">
-                  <p><strong>Descripción:</strong> {{ appointment.service.descripcion }}</p>
-                  <p><strong>Precio:</strong> €{{ appointment.service.precio }}</p>
-                  <p><strong>Duración:</strong> {{ appointment.service.duracion }} minutos</p>
-                  <p><strong>Fecha:</strong> {{ appointment.date }}</p>
-                  <p><strong>Hora:</strong> {{ appointment.time }}</p>
-                  {% if appointment.service.imagen %}
-                      <img src="{{ appointment.service.imagen.url }}" class="img-fluid mt-2" alt="{{ appointment.service.nombre }}">
-                  {% endif %}
-                  </div>              
-              </div>
-          </div>
-          {% endfor %}
-      </div>
-      {% else %}
-      <!-- Tarjeta cuando no hay citas activas -->
-      <div class="row justify-content-center">
-          <div class="col-md-8">
-          <div class="card shadow-sm text-center">
-              <div class="card-header gradiente-header text-white">
-              <h4>📅 No tienes citas activas</h4>
-              </div>
-              <div class="card-body">
-              <p class="lead">¡No has reservado ninguna cita todavía!</p>
-              <p>Descubre nuestros servicios y agenda tu próxima sesión para lucir espectacular. 💅</p>
-              <a href="{% url 'book_appointment' %}" class="btn btn-reservar btn-lg mt-3">
-                  ✨ ¡Reserva Ahora!
-              </a>
-              </div>
-          </div>
-          </div>
-      </div>
+    <div class="row">
+        {% for appointment in appointments %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header gradiente-header text-white">
+                    <h5>{{ appointment.service.nombre }}</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Precio -->
+                    <p class="detail-box">
+                        <i class="bi bi-cash-coin me-2 text-success"></i><strong>Precio:</strong> €{{ appointment.service.precio }}
+                    </p>
+
+                    <!-- Duración -->
+                    <p class="detail-box">
+                        <i class="bi bi-clock-history me-2 text-warning"></i><strong>Duración:</strong> {{ appointment.service.duracion }} minutos
+                    </p>
+
+                    <!-- Fecha -->
+                    <p class="detail-box">
+                        <i class="bi bi-calendar-event me-2 text-info"></i><strong>Fecha:</strong> {{ appointment.date }}
+                    </p>
+
+                    <!-- Hora -->
+                    <p class="detail-box">
+                        <i class="bi bi-clock me-2 text-danger"></i><strong>Hora:</strong> {{ appointment.time }}
+                    </p>
+
+                    <!-- Comentario -->
+                    {% if appointment.comment %}
+                        <p class="detail-box">
+                            <i class="bi bi-chat-text me-2 text-secondary"></i><strong>Comentario:</strong> {{ appointment.comment }}
+                        </p>
+                    {% endif %}
+                
+                    <!-- Imagen del servicio con estilo mejorado -->
+                    {% if appointment.service.imagen %}
+                        <div class="mb-4 text-center">
+                            <img src="{{ appointment.service.imagen.url }}" 
+                                 class="img-fluid mt-3 rounded shadow-sm custom-img" 
+                                 alt="{{ appointment.service.nombre }}">
+                        </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'edit_appointment' appointment.id %}" class="btn btn-warning btn-sm">
+                            ✏️ Editar
+                        </a>
+                        <a href="{% url 'confirm_delete_appointment' appointment.id %}" class="btn btn-danger btn-sm">
+                            🗑️ Eliminar
+                        </a>
+                    </div>                    
+                </div>                 
+            </div> 
+        </div> 
+        {% endfor %}
+    </div>     
+        {% else %}
+    <!-- Tarjeta cuando no hay citas activas -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm text-center">
+                <div class="card-header gradiente-header text-white">
+                    <h4>📅 No tienes citas activas</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">¡No has reservado ninguna cita todavía!</p>
+                    <p>Descubre nuestros servicios y agenda tu próxima sesión para lucir espectacular. 💅</p>
+                    <a href="{% url 'book_appointment' %}" class="btn btn-reservar btn-lg mt-3">
+                        ✨ ¡Reserva Ahora!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
   {% endif %}
 </div>
 {% endblock %}

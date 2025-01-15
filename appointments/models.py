@@ -4,9 +4,10 @@ from services.models import Service  # Importa el modelo Service
 
 class Appointment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)  # Relación correcta
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
+    comment = models.TextField(blank=True, null=True, help_text="Añade un comentario o instrucción especial") 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

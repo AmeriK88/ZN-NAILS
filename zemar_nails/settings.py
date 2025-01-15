@@ -1,16 +1,17 @@
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j$fopaqnh7t@_i2zq%1su+2((o8%ojuum-jk4=js!)1^p5&c2-'
+# Seguridad
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -27,8 +28,11 @@ INSTALLED_APPS = [
     'appointments',
     'services',
     'widget_tweaks',
+    'crispy_forms',
+    'crispy_bootstrap5', 
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,6 +45,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'zemar_nails.urls'
 
+# Plantillas
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,13 +65,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'zemar_nails.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# Base de datos (para SQLite)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / config('DB_NAME', default='db.sqlite3'),
     }
 }
 
@@ -93,8 +96,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'es'  # Cambiar de 'en-us' a 'es'
-TIME_ZONE = 'Europe/Madrid'  # Ajustar según tu zona horaria
+LANGUAGE_CODE = 'es'  
+TIME_ZONE = 'Europe/Madrid' 
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -118,6 +121,11 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',  # Asegúrate de que 'error' sea 'danger' para Bootstrap
 }
+
+#  Usar Bootstrap 5
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 
 
 # Default primary key field type

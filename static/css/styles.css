@@ -59,6 +59,27 @@
   --alert-info-bg: #d1ecf1;
   --alert-info-text: #0c5460;
   --alert-info-border: #bee5eb;
+
+    /*  Colores adicionales */
+    --color-imagen-hover: rgba(0, 0, 0, 0.3); 
+    --color-sombra-detalle: rgba(0, 0, 0, 0.1); 
+    --color-sombra-hover-detalle: rgba(0, 0, 0, 0.15); 
+    --color-fondo-detalle: var(--color-secundario); 
+  
+    /*  Bordes */
+    --radio-borde-detalle: 0.625rem;
+    --radio-borde-img: 0.5rem;
+  
+    /*  Tamaños */
+    --altura-img-detalle: 180px;
+    --espaciado-detalle: 0.625rem 0.9375rem; 
+  
+    /*  Sombras */
+    --sombra-suave: 0 2px 5px var(--color-sombra-detalle);
+    --sombra-hover: 0 4px 12px var(--color-sombra-hover-detalle);
+  
+    /*  Transiciones */
+    --transicion-suave: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 /*  Estilo general */
@@ -336,3 +357,37 @@ body {
     font-size: var(--fuente-pequena);
   }
 }
+
+/*  Mejora de imagen en Mis Citas */
+.custom-img {
+  width: 100%;
+  height: var(--altura-img-detalle);
+  object-fit: cover;
+  border-top-left-radius: var(--radio-borde-img);
+  border-top-right-radius: var(--radio-borde-img);
+  transition: var(--transicion-suave);
+}
+
+/*  Efecto hover para la imagen */
+.custom-img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px var(--color-imagen-hover);
+}
+
+/*  Estilo para los detalles de la cita */
+.detail-box {
+  background-color: var(--color-fondo-detalle);
+  border-radius: var(--radio-borde-detalle);
+  padding: var(--espaciado-detalle);
+  margin-bottom: var(--espaciado-pequeno);
+  box-shadow: var(--sombra-suave);
+  transition: var(--transicion-suave);
+}
+
+/*  Efecto hover para los detalles */
+.detail-box:hover {
+  transform: scale(1.02);
+  box-shadow: var(--sombra-hover);
+}
+
+
