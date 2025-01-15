@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 {% load widget_tweaks %}
 
 {% block content %}
@@ -7,10 +6,25 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card shadow-sm">
-        <div class="card-header text-white text-center gradiente-header">
-          <h4>📅 Reserva tu Cita</h4>
+        <div class="card-header gradiente-header text-white text-center">
+          <h4>
+            {% if appointment %}
+              ✏️ Editar Cita
+            {% else %}
+              📅 Reserva tu Cita
+            {% endif %}
+          </h4>
         </div>
         <div class="card-body">
+
+          <!-- 🔔 Mostrar errores generales -->
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
 
           <form method="post">
             {% csrf_token %}
@@ -19,11 +33,11 @@
             <div class="mb-3">
               <label for="id_service" class="form-label">💅 Servicio</label>
               {{ form.service|add_class:"form-select form-select-lg" }}
-              {% if form.service.errors %}
+              {% for error in form.service.errors %}
                 <div class="invalid-feedback d-block">
-                  {{ form.service.errors.as_text }}
+                  {{ error }}
                 </div>
-              {% endif %}
+              {% endfor %}
             </div>
 
             <!-- Fecha -->
@@ -33,11 +47,11 @@
                 <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
                 {{ form.date|add_class:"form-control form-control-lg" }}
               </div>
-              {% if form.date.errors %}
+              {% for error in form.date.errors %}
                 <div class="invalid-feedback d-block">
-                  {{ form.date.errors.as_text }}
+                  {{ error }}
                 </div>
-              {% endif %}
+              {% endfor %}
             </div>
 
             <!-- Hora -->
@@ -47,30 +61,37 @@
                 <span class="input-group-text"><i class="bi bi-clock"></i></span>
                 {{ form.time|add_class:"form-control form-control-lg" }}
               </div>
-              {% if form.time.errors %}
+              {% for error in form.time.errors %}
                 <div class="invalid-feedback d-block">
-                  {{ form.time.errors.as_text }}
+                  {{ error }}
                 </div>
-              {% endif %}
+              {% endfor %}
             </div>
 
             <!-- Comentario -->
             <div class="mb-3">
               <label for="id_comment" class="form-label">📝 Comentario</label>
               {{ form.comment|add_class:"form-control form-control-lg" }}
-              {% if form.comment.errors %}
+              {% for error in form.comment.errors %}
                 <div class="invalid-feedback d-block">
-                  {{ form.comment.errors.as_text }}
+                  {{ error }}
                 </div>
-              {% endif %}
+              {% endfor %}
             </div>
 
-            <!-- Botón Mejorado -->
+            <!-- Botón de Acción -->
             <button type="submit" class="btn btn-reservar btn-lg w-100">
-              ✨ Reservar Ahora
+              {% if appointment %}
+                💾 Guardar Cambios
+              {% else %}
+                ✨ Reservar Ahora
+              {% endif %}
             </button>
           </form>
 
+          {% if appointment %}
+            <a href="{% url 'my_appointments' %}" class="btn btn-secondary btn-lg w-100 mt-2">↩️ Cancelar</a>
+          {% endif %}
         </div>
       </div>
     </div>

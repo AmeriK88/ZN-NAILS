@@ -60,26 +60,26 @@
   --alert-info-text: #0c5460;
   --alert-info-border: #bee5eb;
 
-    /*  Colores adicionales */
-    --color-imagen-hover: rgba(0, 0, 0, 0.3); 
-    --color-sombra-detalle: rgba(0, 0, 0, 0.1); 
-    --color-sombra-hover-detalle: rgba(0, 0, 0, 0.15); 
-    --color-fondo-detalle: var(--color-secundario); 
-  
-    /*  Bordes */
-    --radio-borde-detalle: 0.625rem;
-    --radio-borde-img: 0.5rem;
-  
-    /*  Tamaños */
-    --altura-img-detalle: 180px;
-    --espaciado-detalle: 0.625rem 0.9375rem; 
-  
-    /*  Sombras */
-    --sombra-suave: 0 2px 5px var(--color-sombra-detalle);
-    --sombra-hover: 0 4px 12px var(--color-sombra-hover-detalle);
-  
-    /*  Transiciones */
-    --transicion-suave: transform 0.3s ease, box-shadow 0.3s ease;
+  /*  Colores adicionales */
+  --color-imagen-hover: rgba(0, 0, 0, 0.3); 
+  --color-sombra-detalle: rgba(0, 0, 0, 0.1); 
+  --color-sombra-hover-detalle: rgba(0, 0, 0, 0.15); 
+  --color-fondo-detalle: var(--color-secundario); 
+
+  /*  Bordes */
+  --radio-borde-detalle: 0.625rem;
+  --radio-borde-img: 0.5rem;
+
+  /*  Tamaños */
+  --altura-img-detalle: 180px;
+  --espaciado-detalle: 0.625rem 0.9375rem; 
+
+  /*  Sombras */
+  --sombra-suave: 0 2px 5px var(--color-sombra-detalle);
+  --sombra-hover: 0 4px 12px var(--color-sombra-hover-detalle);
+
+  /*  Transiciones */
+  --transicion-suave: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 /*  Estilo general */
@@ -89,6 +89,11 @@ body {
   color: var(--color-texto);
   font-size: 1rem;
 }
+
+
+.card {
+  animation: slideIn 0.8s ease-in-out;
+} 
 
 /*  Animación de entrada para tarjetas */
 @keyframes slideIn {
@@ -102,9 +107,6 @@ body {
   }
 }
 
-.card {
-  animation: slideIn 0.8s ease-in-out;
-}
 
 /*  Animación para mensajes de alerta */
 @keyframes fadeIn {
@@ -148,6 +150,29 @@ body {
     gap: 0.3rem; 
   }
 }
+
+/* Estilo base para los enlaces del navbar */
+.nav-link {
+  color: var(--color-texto);
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: var(--espaciado-pequeno) var(--espaciado-medio);
+  border-radius: var(--radio-bordes);
+}
+
+/* Estilo para el enlace activo */
+.nav-link.active {
+  background-color: var(--color-hover);  /* Color de fondo cuando está activo */
+  color: var(--color-secundario);        /* Color de texto claro */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
+}
+
+/* Efecto hover */
+.nav-link:hover {
+  background-color: var(--color-hover);
+  color: var(--color-secundario);
+}
+
 
 
 .alert {
@@ -389,5 +414,10 @@ body {
   transform: scale(1.02);
   box-shadow: var(--sombra-hover);
 }
+
+
+
+
+
 
 

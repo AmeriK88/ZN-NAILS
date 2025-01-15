@@ -12,6 +12,3 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.service.nombre} - {self.date} {self.time}"
-
-    class Meta:
-        unique_together = ('date', 'time')

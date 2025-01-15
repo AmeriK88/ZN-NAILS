@@ -84,18 +84,26 @@
             <!-- Menú de Navegación -->
             <div class="collapse navbar-collapse justify-content-center" id="navbarMenu">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_servicios' %}">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Reseñas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
-            
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/servicios/' %}active{% endif %}" href="{% url 'lista_servicios' %}">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/reseñas/' %}active{% endif %}" href="#">Reseñas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/contacto/' %}active{% endif %}" href="#">Contacto</a>
+                    </li>
+
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'my_appointments' %}">Mis Citas</a>
+                            <a class="nav-link {% if request.path == '/appointments/my/' %}active{% endif %}" href="{% url 'my_appointments' %}">Mis Citas</a>
                         </li>
                     {% endif %}
                 </ul>
-            </div>            
+            </div>
         </div>
     </nav>
 
