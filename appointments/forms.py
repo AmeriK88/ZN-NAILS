@@ -2,22 +2,27 @@ from django import forms
 from .models import Appointment
 from services.models import Service
 from django.utils.translation import gettext_lazy as _
+import datetime
 
 class AppointmentForm(forms.ModelForm):
     service = forms.ModelChoiceField(
         queryset=Service.objects.filter(disponible=True),
-        widget=forms.Select(attrs={'class': 'form-select form-select-lg'}),
+        widget=forms.Select(attrs={'class': 'form-select form-select-lg', 'id': 'id_service'}),
         empty_label=_("Selecciona un servicio"),
         label=_("📌 Servicio")
     )
 
     date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control form-control-lg'}),
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'form-control form-control-lg',
+            'min': datetime.date.today().strftime('%Y-%m-%d')
+        }),
         label=_("📅 Fecha")
     )
 
-    time = forms.TimeField(
-        widget=forms.TimeInput(attrs={'type': 'time', 'class': 'form-control form-control-lg'}),
+    time = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-select form-select-lg'}),
         label=_("⏰ Hora")
     )
 
@@ -35,20 +40,46 @@ class AppointmentForm(forms.ModelForm):
         model = Appointment
         fields = ['service', 'date', 'time', 'comment']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Si hay un servicio seleccionado, generar los horarios
+        if 'service' in self.data and 'date' in self.data:
+            try:
+                service_id = int(self.data.get('service'))
+                service = Service.objects.get(id=service_id)
+                selected_date = self.data.get('date')
+                self.fields['time'].choices = self.get_available_times(service, selected_date)
+            except (ValueError, Service.DoesNotExist):
+                self.fields['time'].choices = []
+        else:
+            self.fields['time'].choices = []
+
+    def get_available_times(self, service, selected_date):
+        start_time = datetime.time(9, 0)  # 09:00 AM
+        end_time = datetime.time(20, 0)   # 08:00 PM
+        step = service.duracion  # Duración en minutos según el servicio
+
+        times = []
+        current_time = datetime.datetime.combine(datetime.date.today(), start_time)
+
+        while current_time.time() <= end_time:
+            # Validar si el horario ya está reservado
+            if not Appointment.objects.filter(date=selected_date, time=current_time.time()).exists():
+                times.append((current_time.time().strftime('%H:%M'), current_time.time().strftime('%H:%M')))
+            # Incrementar por la duración del servicio
+            current_time += datetime.timedelta(minutes=step)
+
+        return times
+
     def clean(self):
         cleaned_data = super().clean()
+        service = cleaned_data.get('service')
         date = cleaned_data.get('date')
         time = cleaned_data.get('time')
 
-        # Validar si la combinación de fecha y hora ya existe, excluyendo la cita actual si es edición
-        existing_appointments = Appointment.objects.filter(date=date, time=time)
-        
-        # Excluir la cita actual si se está editando
-        if self.instance.pk:
-            existing_appointments = existing_appointments.exclude(pk=self.instance.pk)
-
-        if existing_appointments.exists():
-            self.add_error(None, _("⚠️ Cita con esta fecha y hora ya existe."))  # ✅ Error general
+        # Validar disponibilidad
+        if Appointment.objects.filter(service=service, date=date, time=time).exists():
+            self.add_error('time', _("⚠️ Ya hay una cita reservada para esta hora."))
 
         return cleaned_data
-

@@ -4,6 +4,10 @@ from .forms import AppointmentForm
 from .models import Appointment
 from django.contrib import messages
 from services.models import Service
+from django.http import JsonResponse
+from .utils import verificar_disponibilidad
+import datetime
+
 
 @login_required()
 def book_appointment(request):
@@ -20,12 +24,18 @@ def book_appointment(request):
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.user = request.user
-            appointment.save()
-            messages.success(request, "¡Cita reservada con éxito!")
-            return redirect('my_appointments')
-        # ✅ NO sobrescribimos errores del formulario
-        # else:
-        #     messages.error(request, "Error al reservar la cita. Revisa los campos.")
+
+            # Verificar disponibilidad antes de guardar
+            fecha = appointment.date
+            hora_inicio = datetime.datetime.combine(fecha, appointment.time)
+            duracion_servicio = appointment.service.duracion
+
+            if verificar_disponibilidad(fecha, hora_inicio, duracion_servicio):
+                appointment.save()
+                messages.success(request, "¡Cita reservada con éxito!")
+                return redirect('my_appointments')
+            else:
+                messages.error(request, "La hora seleccionada se solapa con otra cita. Elige otro horario.")
 
     return render(request, 'appointments/appointment_form.html', {'form': form})
 
@@ -70,3 +80,36 @@ def my_appointments(request):
         messages.info(request, "No tienes citas registradas.")
     return render(request, 'appointments/my_appointments.html', {'appointments': appointments})
 
+@login_required
+def load_available_times(request):
+    service_id = request.GET.get('service_id')
+    selected_date = request.GET.get('date')
+
+    if service_id and selected_date:
+        try:
+            service = Service.objects.get(id=service_id)
+            selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+
+            start_time = datetime.time(9, 0)
+            end_time = datetime.time(20, 0)
+            step = 15  # Intervalo de 15 minutos
+
+            times = []
+            current_time = datetime.datetime.combine(selected_date, start_time)
+
+            while current_time.time() <= end_time:
+                hora_inicio = current_time
+                duracion_servicio = service.duracion
+
+                # Verificar si el horario está disponible
+                if verificar_disponibilidad(selected_date, hora_inicio, duracion_servicio):
+                    times.append(current_time.time().strftime('%H:%M'))
+
+                current_time += datetime.timedelta(minutes=step)
+
+            return JsonResponse({'times': times})
+
+        except Service.DoesNotExist:
+            return JsonResponse({'error': 'Servicio no encontrado'}, status=404)
+
+    return JsonResponse({'error': 'Parámetros inválidos'}, status=400)
