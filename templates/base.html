@@ -111,11 +111,6 @@
         </div>
     </nav>
 
-    <!-- Loader -->
-    <div id="loader" class="loader-container">
-        <div class="loader"></div>
-    </div>
-
     <!-- Contenido dinámico -->
     <main class="container-fluid container-lg mb-5 leopard-bg">
         <!-- Mensaje -->
@@ -138,6 +133,11 @@
 
         {% block content %}{% endblock %}
     </main>
+
+     <!-- Loader -->
+     <div id="loader" class="loader-container">
+        <div class="loader"></div>
+    </div>
 
     {% include 'accounts/login_modal.html' %}
     {% include 'accounts/register_modal.html' %}
