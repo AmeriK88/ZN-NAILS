@@ -196,14 +196,14 @@ main {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(104, 104, 104, 0.8); /* Fondo semitransparente */
+  background-color: rgba(104, 104, 104, 0.8); 
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  z-index: 9999; /* Asegura que el loader esté encima de todo */
-  visibility: hidden; /* Oculto por defecto */
-  opacity: 0; /* Transparente por defecto */
-  transition: visibility 0.3s, opacity 0.3s; /* Transiciones suaves */
+  justify-content: center; 
+  align-items: center; 
+  z-index: 9999; 
+  visibility: hidden; 
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s; 
 }
 
 .loader-container.show {
@@ -214,10 +214,10 @@ main {
 .loader {
   width: 50px;
   height: 50px;
-  border: 6px solid var(--color-secundario); /* Borde del loader */
-  border-top: 6px solid var(--color-principal); /* Borde superior */
-  border-radius: 50%; /* Forma circular */
-  animation: spin 1s linear infinite; /* Animación de giro */
+  border: 6px solid var(--color-secundario); 
+  border-top: 6px solid var(--color-principal); 
+  border-radius: 50%; 
+  animation: spin 1s linear infinite; 
 }
 
 /*  Transiciones suaves en campos de formulario */
@@ -391,6 +391,35 @@ main {
 .detail-box:hover {
   transform: scale(1.02);
   box-shadow: var(--sombra-hover);
+}
+
+/* Reseñas */
+.card .fw-bold {
+  font-size: 1rem;
+}
+
+.card-text {
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--color-texto);
+}
+
+.card .text-muted {
+  font-size: 0.85rem;
+}
+
+.card .text-primary {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Íconos */
+.card .fas {
+  font-size: 1.2rem;
+}
+
+.card .fa-star {
+  font-size: 1.4rem;
 }
 
 

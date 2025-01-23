@@ -30,6 +30,9 @@
     <!-- Iconos de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- Iconos de Fontawesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
     <!-- Estilos personalizados (deben ir DESPUÉS) -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
@@ -95,7 +98,7 @@
                         <a class="nav-link {% if request.path == '/servicios/' %}active{% endif %}" href="{% url 'lista_servicios' %}">Servicios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/reseñas/' %}active{% endif %}" href="#">Reseñas</a>
+                        <a class="nav-link {% if request.path == '/reviews/' %}active{% endif %}" href="{% url 'reviews_page' %}">Reseñas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/contacto/' %}active{% endif %}" href="#contacto">Contacto</a>

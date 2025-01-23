@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Reseñas - Zemar Nails{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Título de la sección -->
+    <div class="shadow text-center mb-5 p-3 border-0 bg-gradient">
+        <h2 class="text-center mb-4">
+            ⭐ Reseñas de Zemar Nails
+        </h2>
+    </div>
+
+    <!-- Mostrar reseñas existentes -->
+    <div class="mb-4 animate-on-load">
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <!-- Servicio asociado -->
+                        <div class="text-center mb-3">
+                            <h5 class="fw-bold text-primary">
+                                📌 Servicio: {{ review.servicio.nombre }}
+                            </h5>
+                        </div>
+
+                        <!-- Comentario -->
+                        <p class="card-text fs-5 text-dark mb-4 text-center">
+                            <i class="fas fa-quote-left text-muted"></i> {{ review.comment }} <i class="fas fa-quote-right text-muted"></i>
+                        </p>
+
+                        <!-- Detalles adicionales -->
+                        <div class="d-flex justify-content-between align-items-center text-muted small">
+                            <!-- Usuario -->
+                            <div class="text-center">
+                                <i class="fas fa-user-circle me-1 d-block text-secondary"></i> 
+                                <span class="fw-bold">{{ review.user }}</span>
+                            </div>
+
+                            <!-- Puntuación -->
+                            <div class="text-center">
+                                <i class="fas fa-star me-1 text-warning d-block"></i> 
+                                <span class="fw-bold">{{ review.rating }} ⭐</span>
+                            </div>
+
+                            <!-- Fecha -->
+                            <div class="text-center">
+                                <i class="fas fa-calendar-alt me-1 d-block"></i> 
+                                <span>{{ review.created_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <!-- Mostrar tarjeta si no hay reseñas -->
+            <div class="container mt-5">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">¡Vaya! Aún no hay reseñas.</h5>
+                        <p class="text-center text-secondary">Sé el primero en comentar sobre nuestros servicios.</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Mostrar formulario solo si el usuario está autenticado -->
+    {% if user.is_authenticated %}
+        <div class="container mt-5 animate-on-load">
+            <div class="card mb-4">
+                <h3 class="m-3 card-header text-center display-5 fw-bold text-light bg-gradient">Añadir Reseña</h3>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">📌 {{ form.servicio.label }}</label>
+                            {{ form.servicio }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">💬 {{ form.comment.label }}</label>
+                            {{ form.comment }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">⭐ {{ form.rating.label }}</label>
+                            {{ form.rating }}
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-gradient">Enviar</button>
+                        </div>
+                    </form>                
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Mostrar mensaje de iniciar sesión si no está autenticado -->
+        <div class="card bg-white text-center p-3 shadow">
+            <p class="m-0">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="text-primary fw-bold">Inicia sesión</a> 
+                para agregar una reseña sobre nuestros servicios.
+            </p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
