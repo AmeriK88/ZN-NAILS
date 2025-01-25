@@ -11,10 +11,12 @@ from core.utils import (
     enviar_notificacion_eliminacion_cita,
 )
 from .utils import verificar_disponibilidad
+from core.decorators import handle_exceptions
 import datetime
 
 
 @login_required
+@handle_exceptions
 def book_appointment(request):
     """
     Vista para reservar una nueva cita.
@@ -46,6 +48,7 @@ def book_appointment(request):
 
 
 @login_required
+@handle_exceptions
 def edit_appointment(request, appointment_id):
     """
     Vista para editar una cita existente.
@@ -66,6 +69,7 @@ def edit_appointment(request, appointment_id):
 
 
 @login_required
+@handle_exceptions
 def delete_appointment(request, appointment_id):
     """
     Vista para eliminar una cita.
@@ -89,6 +93,7 @@ def delete_appointment(request, appointment_id):
 
 
 @login_required
+@handle_exceptions
 def confirm_delete_appointment(request, appointment_id):
     """
     Vista para confirmar la eliminación de una cita antes de proceder.
@@ -98,6 +103,7 @@ def confirm_delete_appointment(request, appointment_id):
 
 
 @login_required
+@handle_exceptions
 def my_appointments(request):
     """
     Vista para mostrar las citas del usuario autenticado.
@@ -109,6 +115,7 @@ def my_appointments(request):
 
 
 @login_required
+@handle_exceptions
 def load_available_times(request):
     """
     Carga los horarios disponibles para un servicio y una fecha específica.

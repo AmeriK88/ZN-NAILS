@@ -118,27 +118,70 @@ LOGOUT_URL= "/"
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
-        'file': {
+        # Handler para errores de correo electrónico
+        'email_file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'email_errors.log', 
+            'filename': BASE_DIR / 'email_errors.log',
+            'formatter': 'verbose',
+        },
+        # Handler para errores generales
+        'general_file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'general_errors.log',
+            'formatter': 'verbose',
+        },
+        # Handler para errores críticos (500)
+        'critical_file': {
+            'level': 'CRITICAL',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'critical_errors.log',
+            'formatter': 'verbose',
+        },
+        # Handler para consola (opcional, útil en desarrollo)
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
+        # Logger para errores específicos de correo electrónico
         'django.core.mail': {
-            'handlers': ['file'],
+            'handlers': ['email_file', 'console'],
             'level': 'ERROR',
             'propagate': False,
         },
+        # Logger para errores generales
+        'django': {
+            'handlers': ['general_file', 'console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        # Logger para errores críticos
+        'critical': {
+            'handlers': ['critical_file', 'console'],
+            'level': 'CRITICAL',
+            'propagate': True,
+        },
+    },
+    'root': {
+        'handlers': ['console', 'general_file'],
+        'level': 'INFO',
     },
 }
-
 
 
 # Email config
