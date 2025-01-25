@@ -11,19 +11,18 @@ db.sqlite3
 .DS_Store
 *.log
 
-# Archivos temporales
+# Archivos temporales y de caché
 *.tmp
 *.swp
 *.bak
+.cache/
+.pytest_cache/
 
 # Archivos de migraciones de Django
-**/migrations/*.pyc
+**/migrations/*.py
 **/migrations/__pycache__/
-**/migrations/*.log
-**/migrations/*.sqlite3
-**/migrations/*.tmp
 
-# Archivos de configuración del editor
+# Archivos de configuración de IDEs y editores
 .vscode/
 .idea/
 *.code-workspace
@@ -33,14 +32,6 @@ build/
 dist/
 *.egg-info/
 
-# Archivos de caché
-*.cache
-*.pkl
-*.pickle
-.cache/
-.pytest_cache/
-
-# Imágenes
+# Archivos estáticos generados
+staticfiles/
 static/imagenes/
-
-

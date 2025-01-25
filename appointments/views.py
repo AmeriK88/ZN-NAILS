@@ -1,38 +1,43 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
 from .forms import AppointmentForm
 from .models import Appointment
-from django.contrib import messages
 from services.models import Service
-from django.http import JsonResponse
+from core.utils import (
+    enviar_confirmacion_cita,
+    enviar_notificacion_modificacion_cita,
+    enviar_notificacion_eliminacion_cita,
+)
 from .utils import verificar_disponibilidad
 import datetime
 
 
-@login_required()
+@login_required
 def book_appointment(request):
+    """
+    Vista para reservar una nueva cita.
+    Envía un correo de confirmación al usuario después de reservar exitosamente.
+    """
     service_id = request.GET.get('service_id')
-    
-    if service_id:
-        servicio = get_object_or_404(Service, id=service_id)
-        form = AppointmentForm(initial={'service': servicio})
-    else:
-        form = AppointmentForm()
+    servicio = get_object_or_404(Service, id=service_id) if service_id else None
+    form = AppointmentForm(initial={'service': servicio}) if servicio else AppointmentForm()
 
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
-            appointment = form.save(commit=False)
-            appointment.user = request.user
+            cita = form.save(commit=False)
+            cita.user = request.user
 
-            # Verificar disponibilidad antes de guardar
-            fecha = appointment.date
-            hora_inicio = datetime.datetime.combine(fecha, appointment.time)
-            duracion_servicio = appointment.service.duracion
+            fecha = cita.date
+            hora_inicio = datetime.datetime.combine(fecha, cita.time)
+            duracion_servicio = cita.service.duracion
 
             if verificar_disponibilidad(fecha, hora_inicio, duracion_servicio):
-                appointment.save()
-                messages.success(request, "¡Cita reservada con éxito!")
+                cita.save()
+                enviar_confirmacion_cita(request.user.email, cita)
+                messages.success(request, "¡Cita reservada con éxito! Se ha enviado un correo de confirmación.")
                 return redirect('my_appointments')
             else:
                 messages.error(request, "La hora seleccionada se solapa con otra cita. Elige otro horario.")
@@ -40,48 +45,75 @@ def book_appointment(request):
     return render(request, 'appointments/appointment_form.html', {'form': form})
 
 
-
-@login_required()
+@login_required
 def edit_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    """
+    Vista para editar una cita existente.
+    Envía un correo de notificación al usuario después de modificar la cita.
+    """
+    cita = get_object_or_404(Appointment, id=appointment_id, user=request.user)
 
     if request.method == 'POST':
-        form = AppointmentForm(request.POST, instance=appointment)
+        form = AppointmentForm(request.POST, instance=cita)
         if form.is_valid():
-            form.save()
-            messages.success(request, "¡Cita actualizada con éxito!")
+            cita = form.save()
+            enviar_notificacion_modificacion_cita(request.user.email, cita)
+            messages.success(request, "¡Cita actualizada con éxito! Se ha enviado un correo de notificación.")
             return redirect('my_appointments')
-    else:
-        form = AppointmentForm(instance=appointment)
 
-    return render(request, 'appointments/appointment_form.html', {'form': form, 'appointment': appointment})
+    form = AppointmentForm(instance=cita)
+    return render(request, 'appointments/appointment_form.html', {'form': form, 'appointment': cita})
 
 
-@login_required(login_url='login')
+@login_required
 def delete_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    """
+    Vista para eliminar una cita.
+    Envía un correo de notificación al usuario y a los administradores después de eliminar la cita.
+    """
+    cita = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+
     if request.method == 'POST':
-        appointment.delete()
+        cita_detalle = {
+            'email': request.user.email,
+            'servicio': cita.service.nombre,
+            'fecha': cita.date,
+            'hora': cita.time,
+        }
+        enviar_notificacion_eliminacion_cita(cita_detalle['email'], cita)
+        cita.delete()
         messages.success(request, "¡Cita eliminada correctamente!")
         return redirect('my_appointments')
-    return redirect('confirm_delete_appointment', appointment_id=appointment_id)
+
+    return render(request, 'appointments/confirm_delete.html', {'appointment': cita})
 
 
-@login_required(login_url='login')
+@login_required
 def confirm_delete_appointment(request, appointment_id):
+    """
+    Vista para confirmar la eliminación de una cita antes de proceder.
+    """
     appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
     return render(request, 'appointments/confirm_delete.html', {'appointment': appointment})
 
 
-@login_required(login_url='login')
+@login_required
 def my_appointments(request):
+    """
+    Vista para mostrar las citas del usuario autenticado.
+    """
     appointments = Appointment.objects.filter(user=request.user)
     if not appointments.exists():
         messages.info(request, "No tienes citas registradas.")
     return render(request, 'appointments/my_appointments.html', {'appointments': appointments})
 
+
 @login_required
 def load_available_times(request):
+    """
+    Carga los horarios disponibles para un servicio y una fecha específica.
+    Devuelve los horarios como JSON.
+    """
     service_id = request.GET.get('service_id')
     selected_date = request.GET.get('date')
 
@@ -92,7 +124,7 @@ def load_available_times(request):
 
             start_time = datetime.time(9, 0)
             end_time = datetime.time(20, 0)
-            step = service.duracion  # 🔥 Ajustar al tiempo del servicio
+            step = service.duracion  # Duración del servicio en minutos
 
             times = []
             current_time = datetime.datetime.combine(selected_date, start_time)
@@ -104,7 +136,7 @@ def load_available_times(request):
                 if verificar_disponibilidad(selected_date, hora_inicio, duracion_servicio):
                     times.append(current_time.time().strftime('%H:%M'))
 
-                current_time += datetime.timedelta(minutes=step)  # 🔥 Incrementar según el servicio
+                current_time += datetime.timedelta(minutes=step)
 
             return JsonResponse({'times': times})
 
