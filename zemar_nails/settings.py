@@ -1,13 +1,14 @@
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from django.core.exceptions import ImproperlyConfigured
 import environ
-import os
+import certifi
 import pymysql
 pymysql.install_as_MySQLdb()
 import ssl
-import certifi
+import os
 
-ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
+ssl_context = ssl.create_default_context(cafile=certifi.where())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,21 +139,36 @@ LOGGING = {
     },
 }
 
-# Email config
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_HOST_USER = 'chenchito88@gmail.com'
-EMAIL_HOST_PASSWORD = 'xiej jibh hjks thjj'
 
+
+# Email config
+# Email config
+EMAIL_BACKEND = env('EMAIL_BACKEND')  # Obligatorio
+EMAIL_HOST = env('EMAIL_HOST')  # Obligatorio
+EMAIL_PORT = env.int('EMAIL_PORT')  # Obligatorio
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  # Obligatorio
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')  # Obligatorio
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # Obligatorio
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # Obligatorio
+
+REQUIRED_ENV_VARS = [
+    'EMAIL_BACKEND',
+    'EMAIL_HOST',
+    'EMAIL_PORT',
+    'EMAIL_USE_TLS',
+    'EMAIL_USE_SSL',
+    'EMAIL_HOST_USER',
+    'EMAIL_HOST_PASSWORD',
+]
+
+for var in REQUIRED_ENV_VARS:
+    if not env(var, default=None):  # Verifica que ninguna esté vacía
+        raise ImproperlyConfigured(f"La variable de entorno {var} no está definida.")
 
 # Leer y procesar ADMINS desde el archivo .env
 admins_env = env('ADMINS', default='')
 
 ADMINS = [tuple(admin.split(',')) for admin in admins_env.split(';')] if admins_env else []
-
 
 # Static files & config
 STATIC_URL = '/static/'
@@ -166,7 +182,6 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
