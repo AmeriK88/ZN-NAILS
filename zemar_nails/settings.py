@@ -1,21 +1,33 @@
 from pathlib import Path
 from django.contrib.messages import constants as messages
-from decouple import config, Csv
+import environ
+import os
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Seguridad
-SECRET_KEY = config('SECRET_KEY')
+# Initialize django environ
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# Read .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+# Security key
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = env.bool("DEBUG", default=False) 
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 
-
-# Application definition
-
+# App definitions
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,7 +43,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
 ]
 
-# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -44,7 +55,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'zemar_nails.urls'
 
-# Plantillas
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -63,18 +73,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zemar_nails.wsgi.application'
 
-
-# Base de datos (para SQLite)
+# DB config
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / config('DB_NAME', default='db.sqlite3'),
+        'ENGINE': env('DB_ENGINE'),  
+        'NAME': env('DB_NAME'),  
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),  
+        'HOST': env('DB_HOST'), 
+        'PORT': env('DB_PORT'), 
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -91,38 +100,66 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = 'es'  
-TIME_ZONE = 'Europe/Madrid' 
+LANGUAGE_CODE = 'es'
+TIME_ZONE = 'Europe/Madrid'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-
-# Redirige a la página de inicio de sesión cuando un usuario no autenticado.
+# Url redirection
 LOGIN_URL = 'login'
+LOGOUT_URL= "/"
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+# Error logs
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'email_errors.log', 
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.core.mail': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'chenchito88@gmail.com'  # Configúralo en tu .env
+EMAIL_HOST_PASSWORD = 'xiej jibh hjks thjj'  # Configúralo en tu .env
+
+
+
+# Static files & config
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Message tags
+# Message config
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
     messages.INFO: 'info',
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
-    messages.ERROR: 'danger',  # Asegúrate de que 'error' sea 'danger' para Bootstrap
+    messages.ERROR: 'danger',
 }
 
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
