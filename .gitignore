@@ -35,3 +35,4 @@ dist/
 # Archivos estáticos generados
 staticfiles/
 static/imagenes/
+media/
