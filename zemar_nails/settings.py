@@ -32,6 +32,8 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 
 # App definitions
 INSTALLED_APPS = [
+    'admin_interface', 
+    'colorfield', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware', 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -104,6 +107,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'es'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('es', 'Español'),
+]
+
 TIME_ZONE = 'Europe/Madrid'
 USE_I18N = True
 USE_L10N = True
@@ -112,6 +121,10 @@ USE_TZ = True
 # Url redirection
 LOGIN_URL = 'login'
 LOGOUT_URL= "/"
+
+# Session cookie
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Usa la base de datos para sesiones
+SESSION_COOKIE_NAME = 'sessionid'
 
 
 # Error logs
@@ -185,14 +198,13 @@ LOGGING = {
 
 
 # Email config
-# Email config
-EMAIL_BACKEND = env('EMAIL_BACKEND')  # Obligatorio
-EMAIL_HOST = env('EMAIL_HOST')  # Obligatorio
-EMAIL_PORT = env.int('EMAIL_PORT')  # Obligatorio
-EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  # Obligatorio
-EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')  # Obligatorio
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # Obligatorio
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # Obligatorio
+EMAIL_BACKEND = env('EMAIL_BACKEND')  
+EMAIL_HOST = env('EMAIL_HOST') 
+EMAIL_PORT = env.int('EMAIL_PORT')  
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')  
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  
 
 REQUIRED_ENV_VARS = [
     'EMAIL_BACKEND',
@@ -214,8 +226,19 @@ admins_env = env('ADMINS', default='')
 ADMINS = [tuple(admin.split(',')) for admin in admins_env.split(';')] if admins_env else []
 
 # Static files & config
+MEDIA_URL = '/media/'  # URL para acceder a los archivos de medios
+MEDIA_ROOT = BASE_DIR / 'media'  # Carpeta donde se almacenan los archivos subidos por el usuario
+
+
+# Archivos estáticos (CSS, JavaScript, Imágenes)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Directorio donde se almacenarán los archivos estáticos recolectados (con collectstatic)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'media',  # Agregar la carpeta de medios como estática
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Message config
 MESSAGE_TAGS = {
