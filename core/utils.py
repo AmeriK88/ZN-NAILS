@@ -1,3 +1,5 @@
+import ssl
+import certifi
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -30,7 +32,16 @@ def enviar_confirmacion_cita(usuario_email, cita):
     ¡Te esperamos!
     """
 
-    send_mail(asunto, mensaje_usuario, settings.EMAIL_HOST_USER, [usuario_email], fail_silently=False)
+    # Crear un contexto SSL usando el certificado de certifi
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+
+    send_mail(
+        asunto,
+        mensaje_usuario,
+        settings.EMAIL_HOST_USER,
+        [usuario_email],
+        fail_silently=False,
+    )
 
     # Notificar a los administradores
     mensaje_admin = f"""
@@ -61,7 +72,16 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
     Atentamente,
     Zemar Nails
     """
-    send_mail(asunto, mensaje_usuario, settings.EMAIL_HOST_USER, [usuario_email], fail_silently=False)
+    # Crear un contexto SSL usando el certificado de certifi
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+
+    send_mail(
+        asunto,
+        mensaje_usuario,
+        settings.EMAIL_HOST_USER,
+        [usuario_email],
+        fail_silently=False,
+    )
 
     # Notificar a los administradores
     mensaje_admin = f"""
@@ -90,7 +110,16 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
     Atentamente,
     Zemar Nails
     """
-    send_mail(asunto, mensaje_usuario, settings.EMAIL_HOST_USER, [usuario_email], fail_silently=False)
+    # Crear un contexto SSL usando el certificado de certifi
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+
+    send_mail(
+        asunto,
+        mensaje_usuario,
+        settings.EMAIL_HOST_USER,
+        [usuario_email],
+        fail_silently=False,
+    )
 
     # Notificar a los administradores
     mensaje_admin = f"""

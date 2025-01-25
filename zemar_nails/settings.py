@@ -2,10 +2,12 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 import environ
 import os
-
 import pymysql
 pymysql.install_as_MySQLdb()
+import ssl
+import certifi
 
+ssl._create_default_https_context = lambda: ssl.create_default_context(cafile=certifi.where())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -141,9 +143,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'chenchito88@gmail.com'  
-EMAIL_HOST_PASSWORD = 'xiej jibh hjks thjj'  
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'chenchito88@gmail.com'
+EMAIL_HOST_PASSWORD = 'xiej jibh hjks thjj'
 
+
+# Leer y procesar ADMINS desde el archivo .env
+admins_env = env('ADMINS', default='')
+
+ADMINS = [tuple(admin.split(',')) for admin in admins_env.split(';')] if admins_env else []
 
 
 # Static files & config
