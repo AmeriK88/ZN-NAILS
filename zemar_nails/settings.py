@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'appointments',
     'services',
     'reviews',
+    'reports',
     'widget_tweaks',
 ]
 
@@ -251,6 +252,10 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+# Config / for routes
+APPEND_SLASH = True
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

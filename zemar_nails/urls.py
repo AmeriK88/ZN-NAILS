@@ -17,6 +17,7 @@ urlpatterns += i18n_patterns(
     path('appointments/', include('appointments.urls')),
     path('servicios/', include('services.urls')),
     path('reviews/', include('reviews.urls')),
+    path('reports/', include('reports.urls')),
 )
 
 if settings.DEBUG:  # Solo sirve archivos de medios en desarrollo
