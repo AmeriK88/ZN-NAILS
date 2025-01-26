@@ -88,6 +88,9 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),  
         'HOST': env('DB_HOST'), 
         'PORT': env('DB_PORT'), 
+        'OPTIONS': {
+            'charset': 'utf8mb4',  
+        },
     }
 }
 
@@ -123,7 +126,7 @@ LOGIN_URL = 'login'
 LOGOUT_URL= "/"
 
 # Session cookie
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Usa la base de datos para sesiones
+SESSION_ENGINE = 'django.contrib.sessions.backends.db' 
 SESSION_COOKIE_NAME = 'sessionid'
 
 
@@ -198,7 +201,8 @@ LOGGING = {
 
 
 # Email config
-EMAIL_BACKEND = env('EMAIL_BACKEND')  
+EMAIL_BACKEND = 'core.custom_email_backend.CustomEmailBackend'
+#EMAIL_BACKEND = env('EMAIL_BACKEND')  
 EMAIL_HOST = env('EMAIL_HOST') 
 EMAIL_PORT = env.int('EMAIL_PORT')  
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  
@@ -226,8 +230,7 @@ admins_env = env('ADMINS', default='')
 ADMINS = [tuple(admin.split(',')) for admin in admins_env.split(';')] if admins_env else []
 
 # Static files & config
-MEDIA_URL = '/media/'  # URL para acceder a los archivos de medios
-MEDIA_ROOT = BASE_DIR / 'media'  # Carpeta donde se almacenan los archivos subidos por el usuario
+MEDIA_ROOT = BASE_DIR / 'media'  
 
 
 # Archivos estáticos (CSS, JavaScript, Imágenes)
@@ -236,7 +239,7 @@ STATIC_URL = '/static/'
 # Directorio donde se almacenarán los archivos estáticos recolectados (con collectstatic)
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'media',  # Agregar la carpeta de medios como estática
+    BASE_DIR / 'media',  
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 

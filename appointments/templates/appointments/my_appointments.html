@@ -5,10 +5,15 @@
 <div class="container py-5">
     <!-- Título de la sección -->
     <div class="shadow text-center mb-5 p-3 border-0 bg-gradient">
-        <h2 class="text-center mb-4">
+        <h2 class="display-5 text-center mb-4">
             📅 Mis Citas
         </h2>
     </div>
+
+    <div class="m-5 text-center">
+        <a href="{% url 'user_profile' %}" class="btn btn-outline-dark">🔄 Ver historial de citas</a>
+    </div>
+    
 
     {% if appointments %}
     <div class="row">

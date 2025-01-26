@@ -15,6 +15,7 @@ from core.decorators import handle_exceptions
 import datetime
 
 
+
 @login_required
 @handle_exceptions
 def book_appointment(request):

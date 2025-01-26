@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from appointments.models import Appointment  
+from core.decorators import handle_exceptions 
+from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
+from datetime import date
 
 @csrf_protect
 def register_view(request):
@@ -65,3 +69,17 @@ def logout_view(request):
     logout(request)
     messages.info(request, "Has cerrado sesión correctamente.")
     return redirect('home')
+
+@login_required
+@handle_exceptions
+def user_profile(request):
+    # Citas activas
+    active_appointments = Appointment.objects.filter(user=request.user, date__gte=date.today()).order_by('date', 'time')
+    # Historial de citas
+    past_appointments = Appointment.objects.filter(user=request.user, date__lt=date.today()).order_by('-date', '-time')
+
+    context = {
+        'active_appointments': active_appointments,
+        'past_appointments': past_appointments,
+    }
+    return render(request, 'accounts/user_profile.html', context)
