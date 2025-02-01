@@ -22,7 +22,7 @@ import datetime
 def book_appointment(request):
     """
     Vista para reservar una nueva cita.
-    Envía un correo de confirmación al usuario después de reservar exitosamente.
+    Valida que la fecha seleccionada no esté bloqueada antes de permitir la reserva.
     """
     service_id = request.GET.get('service_id')
     servicio = get_object_or_404(Service, id=service_id) if service_id else None
@@ -38,15 +38,23 @@ def book_appointment(request):
             hora_inicio = datetime.datetime.combine(fecha, cita.time)
             duracion_servicio = cita.service.duracion
 
+            # Verificar si la fecha está bloqueada
+            bloqueo = BloqueoFecha.objects.filter(fecha=fecha).first()
+            if bloqueo:
+                messages.error(request, f"No puedes reservar en esta fecha ({fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️")
+                return render(request, 'appointments/appointment_form.html', {'form': form})
+
+            # Verificar disponibilidad horaria
             if verificar_disponibilidad(fecha, hora_inicio, duracion_servicio):
                 cita.save()
                 enviar_confirmacion_cita(request.user.email, cita)
-                messages.success(request, "¡Cita reservada con éxito! Se ha enviado un correo de confirmación.")
+                messages.success(request, "¡Cita reservada con éxito! Se ha enviado un correo de confirmación. ✅")
                 return redirect('my_appointments')
             else:
-                messages.error(request, "La hora seleccionada se solapa con otra cita. Elige otro horario.")
+                messages.error(request, "La hora seleccionada se solapa con otra cita. Elige otro horario. ⚠️")
 
     return render(request, 'appointments/appointment_form.html', {'form': form})
+
 
 
 @login_required
