@@ -28,18 +28,26 @@ El proyecto está organizado en aplicaciones específicas para una mejor escalab
 
 - **Modelos**: 
   - `Appointment`: Representa citas con usuario, servicio, fecha y hora.
+  - `Bloqueo de Fechas`: Representa las fechas no disponibles para reservar.
 - **Vistas**: 
   - Crear, editar y cancelar citas.
   - Validación de fechas y horarios ocupados.
 
-### 2. **Services**
+### 2. **Core**
+
+- **Modelos**: 
+  - `MensajeEspecial`: Representa mensajes informativos de la plataforma para informar a los usuarios.
+- **Vistas**: 
+  - Mostrar todos los servicios disponibles.
+
+### 3. **Services**
 
 - **Modelos**: 
   - `Service`: Representa servicios ofrecidos con nombre, descripción, precio e imagen.
 - **Vistas**: 
   - Mostrar todos los servicios disponibles.
 
-### 3. **Reports**
+### 4. **Reports**
 
 - **Modelos**: 
   - `ReporteDiario`: Reporte de citas e ingresos diarios.
@@ -48,7 +56,7 @@ El proyecto está organizado en aplicaciones específicas para una mejor escalab
   - Generación y descarga de reportes.
   - Visualización en el panel de administración.
 
-### 4. **Users**
+### 5. **Users**
 
 - **Modelos**: 
   - `UserProfile`: Información adicional del usuario.
