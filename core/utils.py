@@ -37,6 +37,7 @@ def enviar_correo_smtp(destinatarios, asunto, mensaje):
         print(f"❌ Error inesperado: {e}")
         raise
 
+
 def enviar_correo_admin(asunto, mensaje):
     """
     Envía un correo electrónico a los administradores configurados en settings.ADMINS.
@@ -45,92 +46,140 @@ def enviar_correo_admin(asunto, mensaje):
         admin_emails = [admin[1] for admin in settings.ADMINS]
         enviar_correo_smtp(admin_emails, asunto, mensaje)
 
+
 def enviar_confirmacion_cita(usuario_email, cita):
     """
     Envía un correo de confirmación al usuario y notifica a los administradores.
     """
-    asunto_usuario = 'Confirmación de tu cita en Zemar Nails'
+    usuario_nombre = cita.user.get_full_name() or cita.user.username
+    asunto_usuario = '📅 Confirmación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
-    Hola {cita.user.get_full_name()},
+    Estimado/a {usuario_nombre},
 
-    Gracias por reservar una cita con nosotros. Aquí están los detalles:
+    Tu cita en **Zemar Nails** ha sido confirmada con éxito. Aquí tienes los detalles:
 
-    Servicio: {cita.service.nombre}
-    Fecha: {cita.date}
-    Hora: {cita.time}
+    📌 **Servicio:** {cita.service.nombre}  
+    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
+    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
 
-    En caso de no poder asistir, puedes modificar o cancelar tu cita desde nuestra app.
+    Si necesitas modificar o cancelar tu cita, puedes hacerlo desde tu cuenta en nuestra plataforma.
 
     ¡Te esperamos!
+
+    Atentamente,  
+    **Equipo Zemar Nails**  
     """
+
     enviar_correo_smtp([usuario_email], asunto_usuario, mensaje_usuario)
 
-    # Correo para los administradores
-    asunto_admin = 'Nueva cita en Zemar Nails'
+    # Email para administradores
+    asunto_admin = '📢 Nueva cita reservada en Zemar Nails'
     mensaje_admin = f"""
-    Nueva cita reservada:
+    Se ha registrado una nueva cita:
 
-    Usuario: {cita.user.get_full_name()} ({usuario_email})
-    Servicio: {cita.service.nombre}
-    Fecha: {cita.date}
-    Hora: {cita.time}
+    👤 **Cliente:** {usuario_nombre} ({usuario_email})  
+    📌 **Servicio:** {cita.service.nombre}  
+    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
+    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
+
+    **Información del usuario:**  
+    🆔 **Nombre de usuario:** {cita.user.username}  
+    📧 **Correo electrónico:** {usuario_email}  
+    📞 **Teléfono:** {cita.user.profile.phone if hasattr(cita.user, 'profile') else 'No proporcionado'}  
+
+    Esta cita ha sido agendada a través del sistema en línea.
+
+    **Panel de administración de Zemar Nails**
     """
+
     enviar_correo_admin(asunto_admin, mensaje_admin)
+
 
 def enviar_notificacion_modificacion_cita(usuario_email, cita):
     """
-    Envía una notificación al usuario y a los administradores al modificar una cita.
+    Notifica al usuario y a los administradores cuando se modifica una cita.
     """
-    asunto_usuario = 'Tu cita en Zemar Nails ha sido modificada'
+    usuario_nombre = cita.user.get_full_name() or cita.user.username
+    asunto_usuario = '📝 Modificación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
-    Hola {cita.user.get_full_name()},
+    Estimado/a {usuario_nombre},
 
-    Tu cita ha sido modificada. Aquí están los nuevos detalles:
+    Tu cita ha sido modificada. A continuación, los detalles actualizados:
 
-    Servicio: {cita.service.nombre}
-    Fecha: {cita.date}
-    Hora: {cita.time}
+    📌 **Servicio:** {cita.service.nombre}  
+    📅 **Nueva fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
+    ⏰ **Nueva hora:** {cita.time.strftime('%I:%M %p')}  
 
-    Atentamente,
-    Zemar Nails
+    Si no realizaste esta modificación, por favor contáctanos lo antes posible.
+
+    Atentamente,  
+    **Equipo Zemar Nails**  
     """
+
     enviar_correo_smtp([usuario_email], asunto_usuario, mensaje_usuario)
 
-    asunto_admin = 'Cita modificada en Zemar Nails'
+    asunto_admin = '🔄 Cita modificada en Zemar Nails'
     mensaje_admin = f"""
-    Una cita ha sido modificada:
+    Se ha modificado una cita:
 
-    Usuario: {cita.user.get_full_name()} ({usuario_email})
-    Servicio: {cita.service.nombre}
-    Fecha: {cita.date}
-    Hora: {cita.time}
+    👤 **Cliente:** {usuario_nombre} ({usuario_email})  
+    📌 **Servicio:** {cita.service.nombre}  
+    📅 **Nueva fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
+    ⏰ **Nueva hora:** {cita.time.strftime('%I:%M %p')}  
+
+    **Información del usuario:**  
+    🆔 **Nombre de usuario:** {cita.user.username}  
+    📧 **Correo electrónico:** {usuario_email}  
+    📞 **Teléfono:** {cita.user.profile.phone if hasattr(cita.user, 'profile') else 'No proporcionado'}  
+
+    Esta actualización fue realizada a través del sistema en línea.
+
+    **Panel de administración de Zemar Nails**
     """
+
     enviar_correo_admin(asunto_admin, mensaje_admin)
+
 
 def enviar_notificacion_eliminacion_cita(usuario_email, cita):
     """
-    Envía una notificación al usuario y a los administradores al eliminar una cita.
+    Notifica al usuario y a los administradores cuando se cancela una cita.
     """
-    asunto_usuario = 'Tu cita en Zemar Nails ha sido eliminada'
+    usuario_nombre = cita.user.get_full_name() or cita.user.username
+    asunto_usuario = '❌ Cancelación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
-    Hola {cita.user.get_full_name()},
+    Estimado/a {usuario_nombre},
 
-    Tu cita para el servicio {cita.service.nombre} el {cita.date} a las {cita.time} ha sido eliminada.
+    Tu cita ha sido cancelada con éxito. Aquí tienes los detalles:
 
-    Si lo deseas, puedes volver a agendar una cita desde nuestra app.
+    📌 **Servicio:** {cita.service.nombre}  
+    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
+    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
 
-    Atentamente,
-    Zemar Nails
+    Si deseas reservar una nueva cita, puedes hacerlo desde nuestra plataforma.
+
+    Atentamente,  
+    **Equipo Zemar Nails**  
     """
+
     enviar_correo_smtp([usuario_email], asunto_usuario, mensaje_usuario)
 
-    asunto_admin = 'Cita eliminada en Zemar Nails'
+    asunto_admin = '⚠️ Cita cancelada en Zemar Nails'
     mensaje_admin = f"""
-    Una cita ha sido eliminada:
+    Se ha cancelado una cita:
 
-    Usuario: {cita.user.get_full_name()} ({usuario_email})
-    Servicio: {cita.service.nombre}
-    Fecha: {cita.date}
-    Hora: {cita.time}
+    👤 **Cliente:** {usuario_nombre} ({usuario_email})  
+    📌 **Servicio:** {cita.service.nombre}  
+    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
+    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
+
+    **Información del usuario:**  
+    🆔 **Nombre de usuario:** {cita.user.username}  
+    📧 **Correo electrónico:** {usuario_email}  
+    📞 **Teléfono:** {cita.user.profile.phone if hasattr(cita.user, 'profile') else 'No proporcionado'}  
+
+    Esta cancelación fue procesada a través del sistema en línea.
+
+    **Panel de administración de Zemar Nails**
     """
+
     enviar_correo_admin(asunto_admin, mensaje_admin)

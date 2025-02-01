@@ -107,7 +107,7 @@ def delete_appointment(request, appointment_id):
         }
         enviar_notificacion_eliminacion_cita(cita_detalle['email'], cita)
         cita.delete()
-        messages.success(request, "¡Cita eliminada correctamente!")
+        messages.success(request, "¡Cita eliminada correctamente! ✅")
         return redirect('my_appointments')
 
     return render(request, 'appointments/confirm_delete.html', {'appointment': cita})
@@ -155,9 +155,9 @@ def load_available_times(request):
             if bloqueo:
                 return JsonResponse({'blocked': True, 'motivo': bloqueo.motivo}, status=200)
 
-            start_time = datetime.time(9, 0)  # Hora de inicio de la jornada
-            end_time = datetime.time(20, 0)  # Hora de cierre
-            step = service.duracion  # Duración del servicio en minutos
+            start_time = datetime.time(9, 0)  
+            end_time = datetime.time(20, 0)  
+            step = service.duracion  
 
             # Obtener todas las citas de la fecha seleccionada
             citas = Appointment.objects.filter(date=selected_date)
