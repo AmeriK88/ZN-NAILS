@@ -33,18 +33,17 @@ def book_appointment(request):
         if form.is_valid():
             cita = form.save(commit=False)
             cita.user = request.user
-
             fecha = cita.date
-            hora_inicio = datetime.datetime.combine(fecha, cita.time)
-            duracion_servicio = cita.service.duracion
 
-            # Verificar si la fecha está bloqueada
+            # Verificar si la fecha está bloqueada antes de hacer cualquier otra validación
             bloqueo = BloqueoFecha.objects.filter(fecha=fecha).first()
             if bloqueo:
                 messages.error(request, f"No puedes reservar en esta fecha ({fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️")
                 return render(request, 'appointments/appointment_form.html', {'form': form})
 
             # Verificar disponibilidad horaria
+            hora_inicio = datetime.datetime.combine(fecha, cita.time)
+            duracion_servicio = cita.service.duracion
             if verificar_disponibilidad(fecha, hora_inicio, duracion_servicio):
                 cita.save()
                 enviar_confirmacion_cita(request.user.email, cita)
@@ -56,26 +55,38 @@ def book_appointment(request):
     return render(request, 'appointments/appointment_form.html', {'form': form})
 
 
-
 @login_required
 @handle_exceptions
 def edit_appointment(request, appointment_id):
     """
     Vista para editar una cita existente.
-    Envía un correo de notificación al usuario después de modificar la cita.
+    Verifica si la fecha editada está bloqueada antes de permitir la modificación.
     """
     cita = get_object_or_404(Appointment, id=appointment_id, user=request.user)
 
     if request.method == 'POST':
         form = AppointmentForm(request.POST, instance=cita)
         if form.is_valid():
+            nueva_fecha = form.cleaned_data['date']
+
+            # Verificar si la nueva fecha está bloqueada
+            bloqueo = BloqueoFecha.objects.filter(fecha=nueva_fecha).first()
+            if bloqueo:
+                messages.error(request, f" No puedes cambiar la cita a esta fecha ({nueva_fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️")
+                return render(request, 'appointments/appointment_form.html', {'form': form, 'appointment': cita})
+
+            # Si la fecha es válida, actualizar la cita
             cita = form.save()
             enviar_notificacion_modificacion_cita(request.user.email, cita)
-            messages.success(request, "¡Cita actualizada con éxito! Se ha enviado un correo de notificación.")
+            messages.success(request, "¡Cita actualizada con éxito! Se ha enviado un correo de notificación. ✅")
             return redirect('my_appointments')
 
     form = AppointmentForm(instance=cita)
-    return render(request, 'appointments/appointment_form.html', {'form': form, 'appointment': cita})
+    return render(request, 'appointments/appointment_form.html', {
+        'form': form,
+        'appointment': cita,
+        'bloqueos': BloqueoFecha.objects.all()  
+    })
 
 
 @login_required
@@ -144,24 +155,45 @@ def load_available_times(request):
             if bloqueo:
                 return JsonResponse({'blocked': True, 'motivo': bloqueo.motivo}, status=200)
 
-            start_time = datetime.time(9, 0)
-            end_time = datetime.time(20, 0)
-            step = service.duracion
+            start_time = datetime.time(9, 0)  # Hora de inicio de la jornada
+            end_time = datetime.time(20, 0)  # Hora de cierre
+            step = service.duracion  # Duración del servicio en minutos
 
+            # Obtener todas las citas de la fecha seleccionada
+            citas = Appointment.objects.filter(date=selected_date)
+
+            # Lista de horarios ocupados
+            horarios_ocupados = []
+
+            for cita in citas:
+                inicio_cita = datetime.datetime.combine(selected_date, cita.time)
+                fin_cita = inicio_cita + datetime.timedelta(minutes=cita.service.duracion)
+
+                # Agregar a la lista de horarios ocupados todos los bloques que cubre la cita
+                bloque_actual = inicio_cita
+                while bloque_actual < fin_cita:
+                    horarios_ocupados.append(bloque_actual.time())
+                    bloque_actual += datetime.timedelta(minutes=service.duracion)
+
+            # Generar los horarios disponibles
             times = []
             current_time = datetime.datetime.combine(selected_date, start_time)
 
-            while current_time.time() <= end_time:
-                if not Appointment.objects.filter(date=selected_date, time=current_time.time()).exists():
+            while current_time.time() < end_time:
+                # Comprobar si el horario y su rango están ocupados
+                fin_actual = current_time + datetime.timedelta(minutes=step)
+                
+                if not any(hora_ocupada >= current_time.time() and hora_ocupada < fin_actual.time() for hora_ocupada in horarios_ocupados):
                     times.append(current_time.time().strftime('%H:%M'))
+
                 current_time += datetime.timedelta(minutes=step)
 
             return JsonResponse({'blocked': False, 'times': times})
 
         except Service.DoesNotExist:
-            return JsonResponse({'error': '⚠️ Servicio no encontrado'}, status=404)
+            return JsonResponse({'error': 'Servicio no encontrado ⚠️'}, status=404)
 
-    return JsonResponse({'error': '⚠️ Parámetros inválidos'}, status=400)
+    return JsonResponse({'error': 'Parámetros inválidos ⚠️'}, status=400)
 
 
 @staff_member_required

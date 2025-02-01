@@ -8,12 +8,24 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedDate = dateInput.value;
 
         if (serviceId && selectedDate) {
-            // Petición al backend para obtener las horas disponibles
             fetch(`/appointments/load-available-times/?service_id=${serviceId}&date=${selectedDate}`)
                 .then(response => response.json())
                 .then(data => {
                     // Limpiar opciones previas
-                    timeSelect.innerHTML = '<option value="">Selecciona una hora</option>';
+                    timeSelect.innerHTML = '';  // Vaciamos la lista
+
+                    const defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Selecciona una hora";
+                    timeSelect.appendChild(defaultOption);
+
+                    if (data.blocked) {
+                        const option = document.createElement("option");
+                        option.value = "";
+                        option.textContent = `Fecha no disponible: ${data.motivo || "Sin motivo especificado"}`;
+                        timeSelect.appendChild(option);
+                        return;  // Salimos de la función
+                    }
 
                     if (data.times && data.times.length > 0) {
                         data.times.forEach(time => {
@@ -32,6 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(error => {
                     console.error('Error al cargar horarios:', error);
                 });
+        } else {
+            timeSelect.innerHTML = '<option value="">Selecciona un servicio y una fecha</option>';
         }
     }
 
