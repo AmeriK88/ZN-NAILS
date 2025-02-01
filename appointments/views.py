@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
@@ -12,8 +13,8 @@ from core.utils import (
 )
 from .utils import verificar_disponibilidad
 from core.decorators import handle_exceptions
+from appointments.models import BloqueoFecha
 import datetime
-
 
 
 @login_required
@@ -120,7 +121,7 @@ def my_appointments(request):
 def load_available_times(request):
     """
     Carga los horarios disponibles para un servicio y una fecha específica.
-    Devuelve los horarios como JSON.
+    Si la fecha está bloqueada, devuelve un mensaje con la razón del bloqueo.
     """
     service_id = request.GET.get('service_id')
     selected_date = request.GET.get('date')
@@ -130,25 +131,35 @@ def load_available_times(request):
             service = Service.objects.get(id=service_id)
             selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
 
+            # Verificar si la fecha está bloqueada
+            bloqueo = BloqueoFecha.objects.filter(fecha=selected_date).first()
+            if bloqueo:
+                return JsonResponse({'blocked': True, 'motivo': bloqueo.motivo}, status=200)
+
             start_time = datetime.time(9, 0)
             end_time = datetime.time(20, 0)
-            step = service.duracion  # Duración del servicio en minutos
+            step = service.duracion
 
             times = []
             current_time = datetime.datetime.combine(selected_date, start_time)
 
             while current_time.time() <= end_time:
-                hora_inicio = current_time
-                duracion_servicio = service.duracion
-
-                if verificar_disponibilidad(selected_date, hora_inicio, duracion_servicio):
+                if not Appointment.objects.filter(date=selected_date, time=current_time.time()).exists():
                     times.append(current_time.time().strftime('%H:%M'))
-
                 current_time += datetime.timedelta(minutes=step)
 
-            return JsonResponse({'times': times})
+            return JsonResponse({'blocked': False, 'times': times})
 
         except Service.DoesNotExist:
-            return JsonResponse({'error': 'Servicio no encontrado'}, status=404)
+            return JsonResponse({'error': '⚠️ Servicio no encontrado'}, status=404)
 
-    return JsonResponse({'error': 'Parámetros inválidos'}, status=400)
+    return JsonResponse({'error': '⚠️ Parámetros inválidos'}, status=400)
+
+
+@staff_member_required
+def calendario_bloqueo(request):
+    """
+    Vista del calendario de fechas bloqueadas accesible solo para administradores.
+    """
+    bloqueos = BloqueoFecha.objects.all()
+    return render(request, 'admin/appointments/calendario_bloqueo.html', {'bloqueos': bloqueos})
