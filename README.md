@@ -37,8 +37,6 @@ El proyecto está organizado en aplicaciones específicas para una mejor escalab
 
 - **Modelos**: 
   - `MensajeEspecial`: Representa mensajes informativos de la plataforma para informar a los usuarios.
-- **Vistas**: 
-  - Mostrar todos los servicios disponibles.
 
 ### 3. **Services**
 
