@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Service
+from .models import Servicio
 
 
-@admin.register(Service)
+@admin.register(Servicio)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'precio', 'duracion', 'disponible', 'preview_image')
     search_fields = ('nombre', 'descripcion')

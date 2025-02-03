@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from services.models import Service 
+from services.models import Servicio 
 from django.utils.translation import gettext_lazy as _
 
-class Appointment(models.Model):
+class Cita(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service = models.ForeignKey(Servicio, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     comment = models.TextField(blank=True, null=True, help_text="Añade un comentario o instrucción especial") 

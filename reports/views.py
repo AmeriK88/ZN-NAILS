@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.db.models import Sum, F
 from django.utils.timezone import make_aware
 from .models import ReporteMensual, ReporteDiario
-from appointments.models import Appointment
+from appointments.models import Cita
 from dateutil.relativedelta import relativedelta
 
 def calcular_reporte_diario(fecha):
@@ -11,7 +11,7 @@ def calcular_reporte_diario(fecha):
     """
     fecha_inicio = make_aware(datetime.combine(fecha, datetime.min.time()))
     fecha_fin = fecha_inicio + timedelta(days=1)
-    citas = Appointment.objects.filter(date__gte=fecha_inicio, date__lt=fecha_fin)
+    citas = Cita.objects.filter(date__gte=fecha_inicio, date__lt=fecha_fin)
 
     total_citas = citas.count()
     total_ingresos = citas.aggregate(
@@ -34,7 +34,7 @@ def calcular_reporte_mensual(fecha):
     """
     mes_inicio = make_aware(datetime.combine(fecha.replace(day=1), datetime.min.time()))
     mes_fin = mes_inicio + relativedelta(months=1)
-    citas = Appointment.objects.filter(date__gte=mes_inicio, date__lt=mes_fin)
+    citas = Cita.objects.filter(date__gte=mes_inicio, date__lt=mes_fin)
 
     total_citas = citas.count()
     total_ingresos = citas.aggregate(

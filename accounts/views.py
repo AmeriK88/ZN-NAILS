@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from appointments.models import Appointment  
+from appointments.models import Cita  
 from core.decorators import handle_exceptions 
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm
@@ -74,9 +74,9 @@ def logout_view(request):
 @handle_exceptions
 def user_profile(request):
     # Citas activas
-    active_appointments = Appointment.objects.filter(user=request.user, date__gte=date.today()).order_by('date', 'time')
+    active_appointments = Cita.objects.filter(user=request.user, date__gte=date.today()).order_by('date', 'time')
     # Historial de citas
-    past_appointments = Appointment.objects.filter(user=request.user, date__lt=date.today()).order_by('-date', '-time')
+    past_appointments = Cita.objects.filter(user=request.user, date__lt=date.today()).order_by('-date', '-time')
 
     context = {
         'active_appointments': active_appointments,

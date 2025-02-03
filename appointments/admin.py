@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Appointment
+from .models import Cita
 from .models import BloqueoFecha
 from django.urls import path
 from .views import calendario_bloqueo
 
-@admin.register(Appointment)
+@admin.register(Cita)
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('user', 'service', 'date', 'time', 'comment')  
     search_fields = ('user__username', 'service', 'comment')

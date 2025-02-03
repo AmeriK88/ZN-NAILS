@@ -1,10 +1,10 @@
 from django import forms
-from .models import Review
-from services.models import Service 
+from .models import Reseña
+from services.models import Servicio 
 
 class ReviewForm(forms.ModelForm):
     class Meta:
-        model = Review
+        model = Reseña
         fields = ['servicio', 'comment', 'rating']
         widgets = {
             'servicio': forms.Select(attrs={
@@ -32,4 +32,4 @@ class ReviewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Solo servicios disponibles
-        self.fields['servicio'].queryset = Service.objects.filter(disponible=True)
+        self.fields['servicio'].queryset = Servicio.objects.filter(disponible=True)

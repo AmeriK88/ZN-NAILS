@@ -1,12 +1,12 @@
 from django import forms
-from .models import Appointment
-from services.models import Service
+from .models import Cita
+from services.models import Servicio
 from django.utils.translation import gettext_lazy as _
 import datetime
 
 class AppointmentForm(forms.ModelForm):
     service = forms.ModelChoiceField(
-        queryset=Service.objects.filter(disponible=True),
+        queryset=Servicio.objects.filter(disponible=True),
         widget=forms.Select(attrs={'class': 'form-select form-select-lg', 'id': 'id_service'}),
         empty_label=_("Selecciona un servicio"),
         label=_("📌 Servicio")
@@ -37,7 +37,7 @@ class AppointmentForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Appointment
+        model = Cita
         fields = ['service', 'date', 'time', 'comment']
 
     def __init__(self, *args, **kwargs):
@@ -47,10 +47,10 @@ class AppointmentForm(forms.ModelForm):
         if 'service' in self.data and 'date' in self.data:
             try:
                 service_id = int(self.data.get('service'))
-                service = Service.objects.get(id=service_id)
+                service = Servicio.objects.get(id=service_id)
                 selected_date = self.data.get('date')
                 self.fields['time'].choices = self.get_available_times(service, selected_date)
-            except (ValueError, Service.DoesNotExist):
+            except (ValueError, Servicio.DoesNotExist):
                 self.fields['time'].choices = []
         elif self.instance.pk:
             # Si estamos editando, cargar los horarios del servicio existente
@@ -68,7 +68,7 @@ class AppointmentForm(forms.ModelForm):
 
         while current_time.time() <= end_time:
             # Validar si el horario ya está reservado
-            if not Appointment.objects.filter(date=selected_date, time=current_time.time()).exists():
+            if not Cita.objects.filter(date=selected_date, time=current_time.time()).exists():
                 times.append((current_time.time().strftime('%H:%M'), current_time.time().strftime('%H:%M')))
             # Incrementar por la duración del servicio
             current_time += datetime.timedelta(minutes=step)
@@ -96,7 +96,7 @@ class AppointmentForm(forms.ModelForm):
         time = cleaned_data.get('time')
 
         # Validar disponibilidad
-        if Appointment.objects.filter(service=service, date=date, time=time).exists():
+        if Cita.objects.filter(service=service, date=date, time=time).exists():
             self.add_error('time', _("⚠️ Ya hay una cita reservada para esta hora."))
 
         return cleaned_data

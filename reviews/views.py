@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Review
+from .models import Reseña
 from .forms import ReviewForm
 
 def reviews_page(request):
-    reviews = Review.objects.all().order_by('-created_at')  # Mostrar reseñas más recientes
+    reviews = Reseña.objects.all().order_by('-created_at')  # Mostrar reseñas más recientes
 
     # Manejo del formulario de reseñas
     if request.user.is_authenticated and request.method == 'POST':

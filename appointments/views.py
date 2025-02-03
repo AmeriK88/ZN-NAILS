@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from .forms import AppointmentForm
-from .models import Appointment
-from services.models import Service
+from .models import Cita
+from services.models import Servicio
 from core.utils import (
     enviar_confirmacion_cita,
     enviar_notificacion_modificacion_cita,
@@ -25,7 +25,7 @@ def book_appointment(request):
     Valida que la fecha seleccionada no esté bloqueada antes de permitir la reserva.
     """
     service_id = request.GET.get('service_id')
-    servicio = get_object_or_404(Service, id=service_id) if service_id else None
+    servicio = get_object_or_404(Servicio, id=service_id) if service_id else None
     form = AppointmentForm(initial={'service': servicio}) if servicio else AppointmentForm()
 
     if request.method == 'POST':
@@ -62,7 +62,7 @@ def edit_appointment(request, appointment_id):
     Vista para editar una cita existente.
     Verifica si la fecha editada está bloqueada antes de permitir la modificación.
     """
-    cita = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    cita = get_object_or_404(Cita, id=appointment_id, user=request.user)
 
     if request.method == 'POST':
         form = AppointmentForm(request.POST, instance=cita)
@@ -96,7 +96,7 @@ def delete_appointment(request, appointment_id):
     Vista para eliminar una cita.
     Envía un correo de notificación al usuario y a los administradores después de eliminar la cita.
     """
-    cita = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    cita = get_object_or_404(Cita, id=appointment_id, user=request.user)
 
     if request.method == 'POST':
         cita_detalle = {
@@ -119,7 +119,7 @@ def confirm_delete_appointment(request, appointment_id):
     """
     Vista para confirmar la eliminación de una cita antes de proceder.
     """
-    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    appointment = get_object_or_404(Cita, id=appointment_id, user=request.user)
     return render(request, 'appointments/confirm_delete.html', {'appointment': appointment})
 
 
@@ -129,7 +129,7 @@ def my_appointments(request):
     """
     Vista para mostrar las citas del usuario autenticado.
     """
-    appointments = Appointment.objects.filter(user=request.user)
+    appointments = Cita.objects.filter(user=request.user)
     if not appointments.exists():
         messages.info(request, "No tienes citas registradas.")
     return render(request, 'appointments/my_appointments.html', {'appointments': appointments})
@@ -147,7 +147,7 @@ def load_available_times(request):
 
     if service_id and selected_date:
         try:
-            service = Service.objects.get(id=service_id)
+            service = Servicio.objects.get(id=service_id)
             selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
 
             # Verificar si la fecha está bloqueada
@@ -160,7 +160,7 @@ def load_available_times(request):
             step = service.duracion  
 
             # Obtener todas las citas de la fecha seleccionada
-            citas = Appointment.objects.filter(date=selected_date)
+            citas = Cita.objects.filter(date=selected_date)
 
             # Lista de horarios ocupados
             horarios_ocupados = []
@@ -190,7 +190,7 @@ def load_available_times(request):
 
             return JsonResponse({'blocked': False, 'times': times})
 
-        except Service.DoesNotExist:
+        except Servicio.DoesNotExist:
             return JsonResponse({'error': 'Servicio no encontrado ⚠️'}, status=404)
 
     return JsonResponse({'error': 'Parámetros inválidos ⚠️'}, status=400)

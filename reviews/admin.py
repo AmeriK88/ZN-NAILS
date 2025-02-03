@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Review, Service
+from .models import Reseña, Servicio
 
-@admin.register(Review)
+@admin.register(Reseña)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'servicio', 'rating', 'created_at')
     list_filter = ('servicio', 'rating', 'created_at')

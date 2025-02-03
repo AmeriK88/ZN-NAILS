@@ -1,11 +1,11 @@
 from datetime import timedelta, datetime
-from .models import Appointment
+from .models import Cita
 from appointments.models import BloqueoFecha
 
 def verificar_disponibilidad(fecha, hora_inicio, duracion_servicio):
     hora_fin = hora_inicio + timedelta(minutes=duracion_servicio)
     
-    citas_existentes = Appointment.objects.filter(date=fecha)
+    citas_existentes = Cita.objects.filter(date=fecha)
 
     for cita in citas_existentes:
         cita_fin = datetime.combine(cita.date, cita.time) + timedelta(minutes=cita.service.duracion)
@@ -25,7 +25,7 @@ def verificar_disponibilidad(fecha, hora_inicio, duracion_servicio):
         return False
 
     hora_fin = hora_inicio + timedelta(minutes=duracion_servicio)
-    citas_existentes = Appointment.objects.filter(date=fecha)
+    citas_existentes = Cita.objects.filter(date=fecha)
 
     for cita in citas_existentes:
         cita_fin = datetime.combine(cita.date, cita.time) + timedelta(minutes=cita.service.duracion)
