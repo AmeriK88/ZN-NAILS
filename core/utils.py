@@ -56,7 +56,7 @@ def enviar_confirmacion_cita(usuario_email, cita):
     """
     usuario_nombre = cita.user.get_full_name() or cita.user.username
      # 🛠 Corrección: Formateo de fecha en español
-    fecha_formateada = date_format(cita.date, format='l, d \d\e F \d\e Y', use_l10n=True)
+    fecha_formateada = date_format(cita.date, format=r"l, d \d\e F \d\e Y", use_l10n=True)
     hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
 
     asunto_usuario = '📅 Confirmación de tu cita en Zemar Nails'
@@ -108,7 +108,7 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
     """
     usuario_nombre = cita.user.get_full_name() or cita.user.username
      # 🛠 Corrección: Formateo de fecha en español
-    fecha_formateada = date_format(cita.date, format='l, d \d\e F \d\e Y', use_l10n=True)
+    fecha_formateada = date_format(cita.date, format=r"l, d \d\e F \d\e Y", use_l10n=True)
     hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
     asunto_usuario = '📝 Modificación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
@@ -156,7 +156,7 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
     """
     usuario_nombre = cita.user.get_full_name() or cita.user.username
      # 🛠 Corrección: Formateo de fecha en español
-    fecha_formateada = date_format(cita.date, format='l, d \d\e F \d\e Y', use_l10n=True)
+    fecha_formateada = date_format(cita.date, format=r"l, d \d\e F \d\e Y", use_l10n=True)
     hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
     asunto_usuario = '❌ Cancelación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
