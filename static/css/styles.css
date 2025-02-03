@@ -82,6 +82,11 @@
   --transicion-suave: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+html, body {
+  overflow-x: hidden; /* Oculta el scroll lateral */
+  width: 100%;
+}
+
 /*  Estilo general */
 body {
   font-family: var(--fuente-secundaria);
@@ -433,13 +438,14 @@ footer {
   color: #f8f9fa;
   position: relative; 
   z-index: 1; 
+  
 }
 
 footer a {
   color: #f8f9fa;
   text-decoration: none;
   pointer-events: auto; 
-  transition: color 0.3s ease;
+  transition: color 0.3s ease; 
 }
 
 footer a:hover {

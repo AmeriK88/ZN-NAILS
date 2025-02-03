@@ -1,9 +1,12 @@
-import smtplib
-import ssl
-import certifi
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.conf import settings
+from django.utils.formats import date_format
+from django.utils.translation import gettext as _
+from django.utils.translation import activate
+import smtplib
+import ssl
+import certifi
 
 # Crear el contexto SSL utilizando certifi
 ssl_context = ssl.create_default_context(cafile=certifi.where())
@@ -29,7 +32,6 @@ def enviar_correo_smtp(destinatarios, asunto, mensaje):
         # Enviar el correo
         server.sendmail(settings.EMAIL_HOST_USER, destinatarios, mensaje_mime.as_string())
         server.quit()
-        print(f"✅ Correo enviado exitosamente a {', '.join(destinatarios)}.")
     except smtplib.SMTPException as e:
         print(f"❌ Error SMTP: {e}")
         raise
@@ -44,6 +46,7 @@ def enviar_correo_admin(asunto, mensaje):
     """
     if settings.ADMINS:
         admin_emails = [admin[1] for admin in settings.ADMINS]
+        activate('es')
         enviar_correo_smtp(admin_emails, asunto, mensaje)
 
 
@@ -52,6 +55,10 @@ def enviar_confirmacion_cita(usuario_email, cita):
     Envía un correo de confirmación al usuario y notifica a los administradores.
     """
     usuario_nombre = cita.user.get_full_name() or cita.user.username
+     # 🛠 Corrección: Formateo de fecha en español
+    fecha_formateada = date_format(cita.date, format='l, d \d\e F \d\e Y', use_l10n=True)
+    hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
+
     asunto_usuario = '📅 Confirmación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
     Estimado/a {usuario_nombre},
@@ -59,8 +66,8 @@ def enviar_confirmacion_cita(usuario_email, cita):
     Tu cita en **Zemar Nails** ha sido confirmada con éxito. Aquí tienes los detalles:
 
     📌 **Servicio:** {cita.service.nombre}  
-    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
-    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
+    📅 **Fecha:** {fecha_formateada}  
+    ⏰ **Hora:** {hora_formateada}  
 
     Si necesitas modificar o cancelar tu cita, puedes hacerlo desde tu cuenta en nuestra plataforma.
 
@@ -79,8 +86,8 @@ def enviar_confirmacion_cita(usuario_email, cita):
 
     👤 **Cliente:** {usuario_nombre} ({usuario_email})  
     📌 **Servicio:** {cita.service.nombre}  
-    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
-    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
+    📅 **Fecha:** {fecha_formateada}  
+    ⏰ **Hora:** {hora_formateada}  
 
     **Información del usuario:**  
     🆔 **Nombre de usuario:** {cita.user.username}  
@@ -100,6 +107,9 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
     Notifica al usuario y a los administradores cuando se modifica una cita.
     """
     usuario_nombre = cita.user.get_full_name() or cita.user.username
+     # 🛠 Corrección: Formateo de fecha en español
+    fecha_formateada = date_format(cita.date, format='l, d \d\e F \d\e Y', use_l10n=True)
+    hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
     asunto_usuario = '📝 Modificación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
     Estimado/a {usuario_nombre},
@@ -124,8 +134,8 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
 
     👤 **Cliente:** {usuario_nombre} ({usuario_email})  
     📌 **Servicio:** {cita.service.nombre}  
-    📅 **Nueva fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
-    ⏰ **Nueva hora:** {cita.time.strftime('%I:%M %p')}  
+    📅 **Nueva fecha:** {fecha_formateada}  
+    ⏰ **Nueva hora:** {hora_formateada}  
 
     **Información del usuario:**  
     🆔 **Nombre de usuario:** {cita.user.username}  
@@ -145,6 +155,9 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
     Notifica al usuario y a los administradores cuando se cancela una cita.
     """
     usuario_nombre = cita.user.get_full_name() or cita.user.username
+     # 🛠 Corrección: Formateo de fecha en español
+    fecha_formateada = date_format(cita.date, format='l, d \d\e F \d\e Y', use_l10n=True)
+    hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
     asunto_usuario = '❌ Cancelación de tu cita en Zemar Nails'
     mensaje_usuario = f"""
     Estimado/a {usuario_nombre},
@@ -152,8 +165,8 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
     Tu cita ha sido cancelada con éxito. Aquí tienes los detalles:
 
     📌 **Servicio:** {cita.service.nombre}  
-    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
-    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
+    📅 **Fecha:** {fecha_formateada}  
+    ⏰ **Hora:** {hora_formateada}  
 
     Si deseas reservar una nueva cita, puedes hacerlo desde nuestra plataforma.
 
@@ -169,8 +182,8 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
 
     👤 **Cliente:** {usuario_nombre} ({usuario_email})  
     📌 **Servicio:** {cita.service.nombre}  
-    📅 **Fecha:** {cita.date.strftime('%A, %d de %B de %Y')}  
-    ⏰ **Hora:** {cita.time.strftime('%I:%M %p')}  
+    📅 **Fecha:** {fecha_formateada}  
+    ⏰ **Hora:** {hora_formateada}  
 
     **Información del usuario:**  
     🆔 **Nombre de usuario:** {cita.user.username}  

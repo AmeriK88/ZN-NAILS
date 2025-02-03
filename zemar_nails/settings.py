@@ -234,14 +234,15 @@ ADMINS = [tuple(admin.split(',')) for admin in admins_env.split(';')] if admins_
 # Static files & config
 MEDIA_ROOT = BASE_DIR / 'media'  
 
+MEDIA_URL = '/media/'
+
 
 # Archivos estáticos (CSS, JavaScript, Imágenes)
 STATIC_URL = '/static/'
 
 # Directorio donde se almacenarán los archivos estáticos recolectados (con collectstatic)
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    BASE_DIR / 'media',  
+    BASE_DIR / 'static', 
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
