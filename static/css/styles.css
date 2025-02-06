@@ -471,6 +471,7 @@ footer hr {
   border-color: var(--color-secundario);
 }
 
+
 /* Media view - small screens */
 
 @media (max-width: 991px) {
