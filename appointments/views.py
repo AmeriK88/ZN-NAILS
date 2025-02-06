@@ -107,7 +107,7 @@ def delete_appointment(request, appointment_id):
         }
         enviar_notificacion_eliminacion_cita(cita_detalle['email'], cita)
         cita.delete()
-        messages.success(request, "¡Cita eliminada correctamente! ✅")
+        messages.success(request, "¡Cita eliminada correctamente! Se ha enviado un correo de confirmación. ✅")
         return redirect('my_appointments')
 
     return render(request, 'appointments/confirm_delete.html', {'appointment': cita})
