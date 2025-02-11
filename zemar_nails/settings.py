@@ -13,20 +13,19 @@ ssl_context = ssl.create_default_context(cafile=certifi.where())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialize django environ
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+# Inicializa django-environ
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# Read .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-
-# Security key
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False) 
+#DEBUG = os.getenv('DEBUG', default='False')
+DEBUG = True
+print(env('DEBUG'))
+print(DEBUG)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Configured apps
     'core',
     'accounts',
     'appointments',
@@ -111,6 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Language config
 LANGUAGE_CODE = 'es'
 
 LANGUAGES = [
@@ -127,7 +129,7 @@ USE_TZ = True
 LOGIN_URL = 'login'
 LOGOUT_URL= "/"
 
-# Session cookie
+# Cookie session config
 SESSION_ENGINE = 'django.contrib.sessions.backends.db' 
 SESSION_COOKIE_NAME = 'sessionid'
 
@@ -203,8 +205,7 @@ LOGGING = {
 
 
 # Email config
-EMAIL_BACKEND = 'core.custom_email_backend.CustomEmailBackend'
-#EMAIL_BACKEND = env('EMAIL_BACKEND')  
+EMAIL_BACKEND = env('EMAIL_BACKEND')  
 EMAIL_HOST = env('EMAIL_HOST') 
 EMAIL_PORT = env.int('EMAIL_PORT')  
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  
@@ -223,7 +224,7 @@ REQUIRED_ENV_VARS = [
 ]
 
 for var in REQUIRED_ENV_VARS:
-    if not env(var, default=None):  # Verifica que ninguna esté vacía
+    if not env(var, default=None): 
         raise ImproperlyConfigured(f"La variable de entorno {var} no está definida.")
 
 # Leer y procesar ADMINS desde el archivo .env
