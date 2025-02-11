@@ -8,25 +8,28 @@ pymysql.install_as_MySQLdb()
 import ssl
 import os
 
-ssl_context = ssl.create_default_context(cafile=certifi.where())
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialize django environ
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+if 'DEBUG' in os.environ:
+    del os.environ['DEBUG']
 
-# Read .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+ssl_context = ssl.create_default_context(cafile=certifi.where())
 
+# Inicializa django-environ
+env = environ.Env(DEBUG=(bool, False))
+# Forzamos a que el contenido del archivo .env sobrescriba las variables existentes
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'), override=True)
 
-# Security key
+print("Archivo .env cargado:", os.path.exists(os.path.join(BASE_DIR, '.env')))
+print("DEBUG from .env file:", env('DEBUG'))
+
+# SECURITY WARNING: keep the secret key used in production secret! 
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False) 
+DEBUG = env.bool("DEBUG", default=False)
+
+print("DEBUG final:", DEBUG)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -65,7 +68,7 @@ ROOT_URLCONF = 'zemar_nails.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'core/templates', 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
