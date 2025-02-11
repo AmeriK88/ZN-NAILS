@@ -8,24 +8,31 @@ pymysql.install_as_MySQLdb()
 import ssl
 import os
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+if 'DEBUG' in os.environ:
+    del os.environ['DEBUG']
+
 ssl_context = ssl.create_default_context(cafile=certifi.where())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Inicializa django-environ
-env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, '.env'))
+# Initialize django environ
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Read .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+# Security key
 SECRET_KEY = env('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.getenv('DEBUG', default='False')
-DEBUG = True
-print(env('DEBUG'))
-print(DEBUG)
+DEBUG = env.bool("DEBUG", default=False) 
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -66,7 +73,7 @@ ROOT_URLCONF = 'zemar_nails.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'core/templates', 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
