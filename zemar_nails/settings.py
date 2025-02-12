@@ -26,13 +26,12 @@ env = environ.Env(
 # Read .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-
 # Security key
 SECRET_KEY = env('SECRET_KEY')
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False) 
+print(DEBUG)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
