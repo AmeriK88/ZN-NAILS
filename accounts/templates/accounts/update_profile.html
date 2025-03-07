@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="m-5 text-center">
+    <a href="{% url 'password_change' %}" class="btn btn-outline-dark">🔒 Cambiar mi contraseña</a>
+</div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <!-- Encabezado -->
+        <div class="card-header gradiente-header text-white text-center">
+          <h4>✏️ Editar Perfil</h4>
+        </div>
+        
+        <!-- Contenido -->
+        <div class="card-body">
+          
+          <!-- ⚠️ Mostrar errores generales del formulario -->
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Nombre -->
+            <div class="mb-3">
+              <label for="id_first_name" class="form-label">Nombre</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                {{ form.first_name|add_class:"form-control form-control-lg" }}
+              </div>
+              {% for error in form.first_name.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ error }}
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Apellidos -->
+            <div class="mb-3">
+              <label for="id_last_name" class="form-label">Apellidos</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-check"></i></span>
+                {{ form.last_name|add_class:"form-control form-control-lg" }}
+              </div>
+              {% for error in form.last_name.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ error }}
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="id_email" class="form-label">Correo electrónico</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                {{ form.email|add_class:"form-control form-control-lg" }}
+              </div>
+              {% for error in form.email.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ error }}
+                </div>
+              {% endfor %}
+            </div>
+            
+            <!-- Botón de acción -->
+            <button type="submit" class="btn btn-reservar btn-lg w-100">
+              Guardar Cambios
+            </button>
+          </form>
+          
+          <!-- Botón opcional de volver (si deseas) -->
+          <a href="{% url 'user_profile' %}" class="btn btn-secondary btn-lg w-100 mt-2">
+            ↩️ Cancelar
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

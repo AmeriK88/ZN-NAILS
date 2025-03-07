@@ -89,3 +89,32 @@ class LoginForm(AuthenticationForm):
         }),
         label='Contraseña'
     )
+
+#  FORMULARIO DE ACTUALIZACIÓN DE DATOS DE USUARIO
+class UpdateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Nombre'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Apellidos'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Correo electrónico'
+            }),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        # Validar que no haya otro usuario con el mismo email (que no sea el actual)
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('⚠️ Este correo ya está en uso por otro usuario.')
+        return email
+
+

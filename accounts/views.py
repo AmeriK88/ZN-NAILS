@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from appointments.models import Cita  
 from core.decorators import handle_exceptions 
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, UpdateUserForm
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from datetime import date
@@ -83,3 +83,25 @@ def user_profile(request):
         'past_appointments': past_appointments,
     }
     return render(request, 'accounts/user_profile.html', context)
+
+@login_required
+@handle_exceptions
+def update_profile_view(request):
+    """
+    Vista para actualizar los datos personales del usuario (nombre, apellidos, email).
+    """
+    if request.method == 'POST':
+        form = UpdateUserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Tu perfil se ha actualizado correctamente!')
+            return redirect('user_profile')  
+        else:
+            messages.error(request, 'Por favor revisa los errores en el formulario.')
+    else:
+        form = UpdateUserForm(instance=request.user)
+
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/update_profile.html', context)
