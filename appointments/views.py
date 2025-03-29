@@ -203,3 +203,37 @@ def calendario_bloqueo(request):
     """
     bloqueos = BloqueoFecha.objects.all()
     return render(request, 'admin/appointments/calendario_bloqueo.html', {'bloqueos': bloqueos})
+
+
+@login_required
+@handle_exceptions
+def pay_penalty(request, appointment_id):
+    """
+    Vista para manejar el pago de la penalización
+    antes de eliminar la cita.
+    """
+    cita = get_object_or_404(Cita, id=appointment_id, user=request.user)
+
+    if request.method == 'POST':
+        # Aquí iría la lógica real de cobro (Stripe, PayPal, etc.)
+        # Simularemos que el pago se realiza con éxito directamente:
+        
+        # Si usas el campo penalizacion_pagada:
+        # cita.penalizacion_pagada = True
+        # cita.save()
+
+        # Eliminar la cita
+        cita_detalle = {
+            'email': request.user.email,
+            'servicio': cita.service.nombre,
+            'fecha': cita.date,
+            'hora': cita.time,
+        }
+        enviar_notificacion_eliminacion_cita(cita_detalle['email'], cita)
+        cita.delete()
+        
+        messages.success(request, "¡Has pagado la penalización de 5€ y la cita se ha eliminado correctamente! ✅")
+        return redirect('my_appointments')
+    
+    # Si es GET, simplemente mostramos la plantilla con el botón de "Pagar"
+    return render(request, 'appointments/pay_penalty.html', {'appointment': cita})

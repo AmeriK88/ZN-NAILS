@@ -9,12 +9,12 @@
                     <h4>⚠️ Confirmar Eliminación</h4>
                 </div>
                 <div class="card-body">
-                    <p class="detail-box">¿Estás seguro de que deseas eliminar esta cita?</p>
+                    <p class="detail-box">¿Estás seguro de que deseas eliminar esta cita? Coste de cancelación: 5,00 €</p>
                     <p class="detail-box"><strong>Servicio:</strong> {{ appointment.service.nombre }}</p>
                     <p class="detail-box"><strong>Fecha:</strong> {{ appointment.date }}</p>
                     <p class="detail-box"><strong>Hora:</strong> {{ appointment.time }}</p>
 
-                    <form method="post" action="{% url 'delete_appointment' appointment.id %}">
+                    <form method="post" action="{% url 'pay_penalty' appointment.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-danger btn-lg">🗑️ Eliminar</button>
                         <a href="{% url 'my_appointments' %}" class="btn btn-secondary btn-lg">❌ Cancelar</a>

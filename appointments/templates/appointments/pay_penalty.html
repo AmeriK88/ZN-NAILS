@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-sm text-center">
+        <div class="card-header gradiente-header text-white">
+            <h4>Pago de Penalización</h4>
+        </div>
+        <div class="card-body">
+            <p>Debes abonar 5 € para cancelar tu cita con {{ appointment.service.nombre }}.</p>
+            <p>Fecha: {{ appointment.date }} - Hora: {{ appointment.time }}</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-success btn-lg">
+                    Pagar 5 € y Eliminar Cita
+                </button>
+            </form>
+            <a href="{% url 'my_appointments' %}" class="btn btn-secondary btn-lg mt-3">
+                Cancelar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
