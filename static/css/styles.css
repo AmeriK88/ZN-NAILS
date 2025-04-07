@@ -471,6 +471,47 @@ footer hr {
   border-color: var(--color-secundario);
 }
 
+/* Visitors styles */
+.visits-counter-card {
+  background: linear-gradient(135deg, var(--color-principal) 0%, var(--color-secundario) 100%);
+  border-radius: 10px;
+  box-shadow: var(--color-sombra-detalle); 
+  color: var(--color-secundario);  
+  width: 100%;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 1rem auto; 
+  position: relative;
+}
+
+/* Ícono animado */
+.counter-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Efecto “bounce” con transform */
+.animate-icon:hover {
+  animation: bounce 0.8s infinite alternate;
+}
+
+
+/* Odometer – número principal */
+.odometer {
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Label debajo del número */
+.counter-label {
+  font-size: 1rem;
+  margin-top: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 
 /* Media view - small screens */
 

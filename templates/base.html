@@ -210,69 +210,88 @@
     {% include 'accounts/login_modal.html' %}
     {% include 'accounts/register_modal.html' %}
 
-    <footer class="bg-dark text-light py-4 mt-auto">
+    <footer class="bg-dark text-light py-4">
         <div class="container">
-          
-          <div class="row text-center text-md-start align-items-center">
+      
+          <!-- Usamos row-cols para ajustar el número de columnas según el tamaño de pantalla -->
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 text-center text-md-start align-items-start">
+            
             <!-- Contacto -->
-            <div class="col-md-4 mb-4">
+            <div class="col">
               <h5 id="contacto" class="text-uppercase">Contacto</h5>
               <p><i class="bi bi-geo-alt-fill me-2"></i>Arrecife, Lanzarote</p>
               <p><i class="bi bi-telephone-fill me-2"></i>+34 600 123 456</p>
               <p><i class="bi bi-envelope-fill me-2"></i>info@zemarnails.com</p>
-            </div>        
-      
-            <!-- Enlaces rápidos -->
-            <div class="col-md-4 mb-4">
-                <h5 class="text-uppercase">Enlaces</h5>
-                <ul class="list-unstyled">
-                    <li><a href="{% url 'lista_servicios' %}" class="text-light">Servicios</a></li>
-                    <li><a href="{% url 'reviews_page' %}" class="text-light">Reseñas</a></li>
-                    <li>
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'book_appointment' %}" class="text-light">Reservar Cita</a>
-                        {% else %}
-                            <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#loginModal">Reservar Cita</a>
-                        {% endif %}
-                    </li>
-                    <li>
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'my_appointments' %}" class="text-light">Mis Citas</a>
-                        {% else %}
-                            <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a>
-                        {% endif %}
-                    </li>
-                </ul>
             </div>
-
+            
+            <!-- Enlaces rápidos -->
+            <div class="col">
+              <h5 class="text-uppercase">Enlaces</h5>
+              <ul class="list-unstyled">
+                <li><a href="{% url 'lista_servicios' %}" class="text-light">Servicios</a></li>
+                <li><a href="{% url 'reviews_page' %}" class="text-light">Reseñas</a></li>
+                <li>
+                  {% if user.is_authenticated %}
+                    <a href="{% url 'book_appointment' %}" class="text-light">Reservar Cita</a>
+                  {% else %}
+                    <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#loginModal">Reservar Cita</a>
+                  {% endif %}
+                </li>
+                <li>
+                  {% if user.is_authenticated %}
+                    <a href="{% url 'my_appointments' %}" class="text-light">Mis Citas</a>
+                  {% else %}
+                    <a href="#" class="text-light" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a>
+                  {% endif %}
+                </li>
+              </ul>
+            </div>
+      
             <!-- Ubicación -->
-            <div class="col-md-4 mb-4">
-                <h5 class="text-uppercase">Ubicación</h5>
-                <p><i class="bi bi-geo-alt-fill me-2"></i> Calle Elguinaguaria, 5, Bajo C, 35500, Arrecife</p>
-                <div class="map-container">
-                    <iframe
-                        width="100%"
-                        height="175"
-                        style="border:0; border-radius: 8px;"
-                        loading="lazy"
-                        allowfullscreen
-                        referrerpolicy="no-referrer-when-downgrade"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d349.3233149480032!2d-13.5516436!3d28.9636752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xc46489999999999%3A0x0000000000000000!2sCalle%20Elguinaguaria%2C%205%2C%2035500%20Arrecife%2C%20Las%20Palmas!5e0!3m2!1ses!2ses!4v1706924978736">
-                    </iframe>
-                </div>
+            <div class="col">
+              <h5 class="text-uppercase">Ubicación</h5>
+              <p><i class="bi bi-geo-alt-fill me-2"></i> Calle Elguinaguaria, 5, Bajo C, 35500, Arrecife</p>
+              <div class="map-container">
+                <iframe
+                  width="100%"
+                  height="175"
+                  style="border:0; border-radius: 8px;"
+                  loading="lazy"
+                  allowfullscreen
+                  referrerpolicy="no-referrer-when-downgrade"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d349.3233149480032!2d-13.5516436!3d28.9636752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xc46489999999999%3A0x0000000000000000!2sCalle%20Elguinaguaria%2C%205%2C%2035500%20Arrecife%2C%20Las%20Palmas!5e0!3m2!1ses!2ses!4v1706924978736">
+                </iframe>
+              </div>
             </div>
       
             <!-- Redes sociales -->
-            <div class="col-md-4 mb-4">
+            <div class="col">
               <h5 class="text-uppercase">Síguenos</h5>
               <div class="d-flex justify-content-center justify-content-md-start gap-3">
-                <a href="https://www.instagram.com/zemar.nails/" target="_blank" class="text-light fs-4"><i class="bi bi-instagram"></i></a>
-                <a href="https://www.facebook.com/" target="_blank" class="text-light fs-4"><i class="bi bi-facebook"></i></a>
-                <a href="https://www.tiktok.com/" target="_blank" class="text-light fs-4"><i class="bi bi-tiktok"></i></a>
-                <a href="https://www.pinterest.com/" target="_blank" class="text-light fs-4"><i class="bi bi-pinterest"></i></a>
+                <a href="https://www.instagram.com/zemar.nails/" target="_blank" class="text-light fs-4">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <a href="https://www.facebook.com/" target="_blank" class="text-light fs-4">
+                  <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://www.tiktok.com/" target="_blank" class="text-light fs-4">
+                  <i class="bi bi-tiktok"></i>
+                </a>
+                <a href="https://www.pinterest.com/" target="_blank" class="text-light fs-4">
+                  <i class="bi bi-pinterest"></i>
+                </a>
               </div>
             </div>
           </div>
+      
+          <!-- Visit Counter -->
+          <div class="text-center my-4 visits-counter-card">
+            <div class="counter-icon animate-icon">
+              <i class="fas fa-user-friends"></i>
+            </div>
+            <div id="odometer" class="odometer animate-on-load">{{ contador_actualizado|default:"0" }}</div>
+            <div class="counter-label">Visitas Totales</div>
+          </div>  
       
           <hr class="border-light">
           <div class="text-center small">
@@ -281,7 +300,8 @@
           </div>
       
         </div>
-      </footer>         
+      </footer>
+               
 
     <!-- Scripts -->
     <script>
