@@ -26,3 +26,18 @@ class BloqueoFecha(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.motivo if self.motivo else 'Sin motivo'}"
+    
+class BloqueoIntervalo(models.Model):
+    fecha = models.DateField(verbose_name=_("Fecha Bloqueada"))
+    hora_inicio = models.TimeField(verbose_name=_("Hora de inicio"))
+    hora_fin = models.TimeField(verbose_name=_("Hora de fin"))
+    motivo = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Motivo"))
+    creado_el = models.DateTimeField(auto_now_add=True, verbose_name=_("Creado el"))
+
+    class Meta:
+        verbose_name = _("Bloqueo Horario")
+        verbose_name_plural = _("Bloqueos Horarios")
+        ordering = ['-fecha', 'hora_inicio']
+
+    def __str__(self):
+        return f"{self.fecha} de {self.hora_inicio} a {self.hora_fin} - {self.motivo or 'Sin motivo'}"

@@ -139,61 +139,68 @@ def my_appointments(request):
 @handle_exceptions
 def load_available_times(request):
     """
-    Carga los horarios disponibles para un servicio y una fecha específica.
-    Si la fecha está bloqueada, devuelve un mensaje con la razón del bloqueo.
+    Devuelve los horarios disponibles para un servicio y una fecha,
+    garantizando que el intervalo completo del servicio no se solape con citas existentes
+    ni con intervalos de bloqueo definidos.
     """
     service_id = request.GET.get('service_id')
-    selected_date = request.GET.get('date')
+    selected_date_str = request.GET.get('date')
 
-    if service_id and selected_date:
-        try:
-            service = Servicio.objects.get(id=service_id)
-            selected_date = datetime.datetime.strptime(selected_date, "%Y-%m-%d").date()
+    if not service_id or not selected_date_str:
+        return JsonResponse({'error': 'Parámetros inválidos ⚠️'}, status=400)
 
-            # Verificar si la fecha está bloqueada
-            bloqueo = BloqueoFecha.objects.filter(fecha=selected_date).first()
-            if bloqueo:
-                return JsonResponse({'blocked': True, 'motivo': bloqueo.motivo}, status=200)
+    try:
+        service = Servicio.objects.get(id=service_id)
+        selected_date = datetime.datetime.strptime(selected_date_str, "%Y-%m-%d").date()
+    except Servicio.DoesNotExist:
+        return JsonResponse({'error': 'Servicio no encontrado ⚠️'}, status=404)
 
-            start_time = datetime.time(9, 0)  
-            end_time = datetime.time(20, 0)  
-            step = service.duracion  
+    # Verificar bloqueo total del día
+    bloqueo_dia = BloqueoFecha.objects.filter(fecha=selected_date).first()
+    if bloqueo_dia:
+        return JsonResponse({'blocked': True, 'motivo': bloqueo_dia.motivo}, status=200)
 
-            # Obtener todas las citas de la fecha seleccionada
-            citas = Cita.objects.filter(date=selected_date)
+    start_time = datetime.time(9, 0)
+    end_time = datetime.time(20, 0)
+    step = service.duracion  # Duración en minutos según el servicio
 
-            # Lista de horarios ocupados
-            horarios_ocupados = []
+    # Obtener intervalos ocupados por citas existentes
+    citas = Cita.objects.filter(date=selected_date)
+    horarios_ocupados = []
+    for cita in citas:
+        inicio_cita = datetime.datetime.combine(selected_date, cita.time)
+        fin_cita = inicio_cita + datetime.timedelta(minutes=cita.service.duracion)
+        bloque_actual = inicio_cita
+        while bloque_actual < fin_cita:
+            horarios_ocupados.append(bloque_actual.time())
+            bloque_actual += datetime.timedelta(minutes=service.duracion)
 
-            for cita in citas:
-                inicio_cita = datetime.datetime.combine(selected_date, cita.time)
-                fin_cita = inicio_cita + datetime.timedelta(minutes=cita.service.duracion)
+    # Obtener intervalos bloqueados por el admin (bloqueos parciales)
+    blocked_intervals = get_blocked_intervals(selected_date)
 
-                # Agregar a la lista de horarios ocupados todos los bloques que cubre la cita
-                bloque_actual = inicio_cita
-                while bloque_actual < fin_cita:
-                    horarios_ocupados.append(bloque_actual.time())
-                    bloque_actual += datetime.timedelta(minutes=service.duracion)
+    # Generar los horarios disponibles
+    times = []
+    current_time = datetime.datetime.combine(selected_date, start_time)
+    end_datetime = datetime.datetime.combine(selected_date, end_time)
+    service_duration_td = datetime.timedelta(minutes=service.duracion)
 
-            # Generar los horarios disponibles
-            times = []
-            current_time = datetime.datetime.combine(selected_date, start_time)
+    while current_time + service_duration_td <= end_datetime:
+        candidate_end = current_time + service_duration_td
 
-            while current_time.time() < end_time:
-                # Comprobar si el horario y su rango están ocupados
-                fin_actual = current_time + datetime.timedelta(minutes=step)
-                
-                if not any(hora_ocupada >= current_time.time() and hora_ocupada < fin_actual.time() for hora_ocupada in horarios_ocupados):
-                    times.append(current_time.time().strftime('%H:%M'))
+        # Comprobar si el rango de horas se solapa con citas existentes
+        citas_ocupadas = any(
+            hora_ocupada >= current_time.time() and hora_ocupada < candidate_end.time()
+            for hora_ocupada in horarios_ocupados
+        )
+        # Comprobar solapamiento con bloqueos parciales
+        bloqueado = is_interval_blocked(current_time, candidate_end, blocked_intervals)
 
-                current_time += datetime.timedelta(minutes=step)
+        if not citas_ocupadas and not bloqueado:
+            times.append(current_time.time().strftime('%H:%M'))
 
-            return JsonResponse({'blocked': False, 'times': times})
+        current_time += service_duration_td
 
-        except Servicio.DoesNotExist:
-            return JsonResponse({'error': 'Servicio no encontrado ⚠️'}, status=404)
-
-    return JsonResponse({'error': 'Parámetros inválidos ⚠️'}, status=400)
+    return JsonResponse({'blocked': False, 'times': times})
 
 
 @staff_member_required
@@ -203,3 +210,27 @@ def calendario_bloqueo(request):
     """
     bloqueos = BloqueoFecha.objects.all()
     return render(request, 'admin/appointments/calendario_bloqueo.html', {'bloqueos': bloqueos})
+
+
+def get_blocked_intervals(selected_date):
+    """
+    Devuelve una lista de tuplas (inicio, fin) de BloqueoIntervalo para la fecha dada.
+    """
+    from .models import BloqueoIntervalo  # Import local para evitar problemas circulares
+    blocked = []
+    for bloqueo in BloqueoIntervalo.objects.filter(fecha=selected_date):
+        inicio = datetime.datetime.combine(selected_date, bloqueo.hora_inicio)
+        fin = datetime.datetime.combine(selected_date, bloqueo.hora_fin)
+        blocked.append((inicio, fin))
+    return blocked
+
+def is_interval_blocked(candidate_start, candidate_end, blocked_intervals):
+    """
+    Verifica si el intervalo candidato se solapa con alguno de los intervalos bloqueados.
+    """
+    for b_start, b_end in blocked_intervals:
+        # Si candidate_start < b_end y candidate_end > b_start, hay solapamiento.
+        if candidate_start < b_end and candidate_end > b_start:
+            return True
+    return False
+

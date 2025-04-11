@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Cita
-from .models import BloqueoFecha
+from .models import BloqueoFecha, BloqueoIntervalo  
 from django.urls import path
 from .views import calendario_bloqueo
 
@@ -23,3 +23,9 @@ class BloqueoFechaAdmin(admin.ModelAdmin):
             path('calendario-bloqueo/', self.admin_site.admin_view(calendario_bloqueo), name='calendario_bloqueo'),
         ]
         return custom_urls + urls
+    
+@admin.register(BloqueoIntervalo)
+class BloqueoIntervaloAdmin(admin.ModelAdmin):
+    list_display = ('fecha', 'hora_inicio', 'hora_fin', 'motivo', 'creado_el')
+    list_filter = ('fecha',)
+    ordering = ['-fecha', 'hora_inicio']
