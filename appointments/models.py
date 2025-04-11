@@ -10,7 +10,6 @@ class Cita(models.Model):
     time = models.TimeField()
     comment = models.TextField(blank=True, null=True, help_text="Añade un comentario o instrucción especial") 
     created_at = models.DateTimeField(auto_now_add=True)
-    penalizacion_pagada = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - {self.service.nombre} - {self.date} {self.time}"
