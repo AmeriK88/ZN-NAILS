@@ -59,28 +59,28 @@ def enviar_confirmacion_cita(usuario_email, cita):
     fecha_formateada = date_format(cita.date, format=r"l, d \d\e F \d\e Y", use_l10n=True)
     hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
 
-    asunto_usuario = '📅 Confirmación de tu cita en Zemar Nails'
+    asunto_usuario = '📅 Confirmación de tu cita en Carla Márquez Nails'
     mensaje_usuario = f"""
     Estimado/a {usuario_nombre},
 
-    Tu cita en **Zemar Nails** ha sido confirmada con éxito. Aquí tienes los detalles:
+    Tu cita en **Carla Márquez Nails** ha sido confirmada con éxito. Aquí tienes los detalles:
 
     📌 **Servicio:** {cita.service.nombre}  
     📅 **Fecha:** {fecha_formateada}  
     ⏰ **Hora:** {hora_formateada}  
 
-    Si necesitas modificar o cancelar tu cita, puedes hacerlo desde tu cuenta en nuestra plataforma.
+    Si necesitas modificar o cancelar tu cita, puedes hacerlo desde tu cuenta en nuestra app web.
 
     ¡Te esperamos!
 
     Atentamente,  
-    **Equipo Zemar Nails**  
+    **Carla Márquez Nails**  
     """
 
     enviar_correo_smtp([usuario_email], asunto_usuario, mensaje_usuario)
 
     # Email para administradores
-    asunto_admin = '📢 Nueva cita reservada en Zemar Nails'
+    asunto_admin = '📢 Nueva cita reservada en Carla Márquez Nails'
     mensaje_admin = f"""
     Se ha registrado una nueva cita:
 
@@ -96,7 +96,7 @@ def enviar_confirmacion_cita(usuario_email, cita):
 
     Esta cita ha sido agendada a través del sistema en línea.
 
-    **Panel de administración de Zemar Nails**
+    **Panel de administración de Carla Márquez Nails**
     """
 
     enviar_correo_admin(asunto_admin, mensaje_admin)
@@ -110,7 +110,7 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
      # 🛠 Corrección: Formateo de fecha en español
     fecha_formateada = date_format(cita.date, format=r"l, d \d\e F \d\e Y", use_l10n=True)
     hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
-    asunto_usuario = '📝 Modificación de tu cita en Zemar Nails'
+    asunto_usuario = '📝 Modificación de tu cita en Carla Márquez Nails'
     mensaje_usuario = f"""
     Estimado/a {usuario_nombre},
 
@@ -123,12 +123,12 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
     Si no realizaste esta modificación, por favor contáctanos lo antes posible.
 
     Atentamente,  
-    **Equipo Zemar Nails**  
+    **Carla Márquez Nails**  
     """
 
     enviar_correo_smtp([usuario_email], asunto_usuario, mensaje_usuario)
 
-    asunto_admin = '🔄 Cita modificada en Zemar Nails'
+    asunto_admin = '🔄 Cita modificada en Carla Márquez Nails'
     mensaje_admin = f"""
     Se ha modificado una cita:
 
@@ -144,7 +144,7 @@ def enviar_notificacion_modificacion_cita(usuario_email, cita):
 
     Esta actualización fue realizada a través del sistema en línea.
 
-    **Panel de administración de Zemar Nails**
+    **Panel de administración de Carla Márquez Nails**
     """
 
     enviar_correo_admin(asunto_admin, mensaje_admin)
@@ -158,7 +158,7 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
      # 🛠 Corrección: Formateo de fecha en español
     fecha_formateada = date_format(cita.date, format=r"l, d \d\e F \d\e Y", use_l10n=True)
     hora_formateada = date_format(cita.time, format='H:i', use_l10n=True)
-    asunto_usuario = '❌ Cancelación de tu cita en Zemar Nails'
+    asunto_usuario = '❌ Cancelación de tu cita en Carla Márquez Nails'
     mensaje_usuario = f"""
     Estimado/a {usuario_nombre},
 
@@ -168,15 +168,15 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
     📅 **Fecha:** {fecha_formateada}  
     ⏰ **Hora:** {hora_formateada}  
 
-    Si deseas reservar una nueva cita, puedes hacerlo desde nuestra plataforma.
+    Si deseas reservar una nueva cita, puedes hacerlo desde nuestra app web.
 
     Atentamente,  
-    **Equipo Zemar Nails**  
+    **Carla Márquez Nails**  
     """
 
     enviar_correo_smtp([usuario_email], asunto_usuario, mensaje_usuario)
 
-    asunto_admin = '⚠️ Cita cancelada en Zemar Nails'
+    asunto_admin = '⚠️ Cita cancelada en Carla Márquez Nails'
     mensaje_admin = f"""
     Se ha cancelado una cita:
 
@@ -192,7 +192,7 @@ def enviar_notificacion_eliminacion_cita(usuario_email, cita):
 
     Esta cancelación fue procesada a través del sistema en línea.
 
-    **Panel de administración de Zemar Nails**
+    **Panel de administración de Carla Márquez Nails**
     """
 
     enviar_correo_admin(asunto_admin, mensaje_admin)

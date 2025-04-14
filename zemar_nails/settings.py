@@ -15,6 +15,8 @@ if 'DEBUG' in os.environ:
 
 ssl_context = ssl.create_default_context(cafile=certifi.where())
 
+SECURE_SSL_REDIRECT = False
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool("DEBUG", default=False) 
 print(DEBUG)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 # App definitions
 INSTALLED_APPS = [
