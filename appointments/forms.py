@@ -59,21 +59,23 @@ class AppointmentForm(forms.ModelForm):
             self.fields['time'].choices = []
 
     def get_available_times(self, service, selected_date):
-        start_time = datetime.time(9, 0)  # 09:00 AM
-        end_time = datetime.time(20, 0)   # 08:00 PM
-        step = service.duracion  # Duración en minutos según el servicio
-
+        start_time = datetime.time(9, 0)
+        end_time = datetime.time(20, 0)
+        service_duration_td = datetime.timedelta(minutes=service.duracion)
         times = []
-        current_time = datetime.datetime.combine(datetime.date.today(), start_time)
+        step_increment = datetime.timedelta(minutes=5)
+        candidate_start = datetime.datetime.combine(datetime.date.today(), start_time)
+        end_datetime = datetime.datetime.combine(datetime.date.today(), end_time)
 
-        while current_time.time() <= end_time:
-            # Validar si el horario ya está reservado
-            if not Cita.objects.filter(date=selected_date, time=current_time.time()).exists():
-                times.append((current_time.time().strftime('%H:%M'), current_time.time().strftime('%H:%M')))
-            # Incrementar por la duración del servicio
-            current_time += datetime.timedelta(minutes=step)
+        while candidate_start + service_duration_td <= end_datetime:
+            candidate_end = candidate_start + service_duration_td
+            # Verificar solapamientos con citas ya existentes
+            if not Cita.objects.filter(date=selected_date, time=candidate_start.time()).exists():
+                times.append((candidate_start.time().strftime('%H:%M'), candidate_start.time().strftime('%H:%M')))
+            candidate_start += step_increment
 
         return times
+
     
       #  MÉTODO DE VALIDACIÓN DE LA HORA
     def clean_time(self):

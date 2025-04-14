@@ -140,8 +140,8 @@ def my_appointments(request):
 def load_available_times(request):
     """
     Devuelve los horarios disponibles para un servicio y una fecha,
-    garantizando que el intervalo completo del servicio no se solape con citas existentes
-    ni con intervalos de bloqueo definidos.
+    asegurando que el intervalo completo del servicio no se solape con citas existentes
+    ni con intervalos de bloqueo.
     """
     service_id = request.GET.get('service_id')
     selected_date_str = request.GET.get('date')
@@ -160,47 +160,46 @@ def load_available_times(request):
     if bloqueo_dia:
         return JsonResponse({'blocked': True, 'motivo': bloqueo_dia.motivo}, status=200)
 
+    # Definir rango de horarios
     start_time = datetime.time(9, 0)
     end_time = datetime.time(20, 0)
-    step = service.duracion  # Duración en minutos según el servicio
-
-    # Obtener intervalos ocupados por citas existentes
-    citas = Cita.objects.filter(date=selected_date)
-    horarios_ocupados = []
-    for cita in citas:
-        inicio_cita = datetime.datetime.combine(selected_date, cita.time)
-        fin_cita = inicio_cita + datetime.timedelta(minutes=cita.service.duracion)
-        bloque_actual = inicio_cita
-        while bloque_actual < fin_cita:
-            horarios_ocupados.append(bloque_actual.time())
-            bloque_actual += datetime.timedelta(minutes=service.duracion)
-
-    # Obtener intervalos bloqueados por el admin (bloqueos parciales)
-    blocked_intervals = get_blocked_intervals(selected_date)
-
-    # Generar los horarios disponibles
-    times = []
-    current_time = datetime.datetime.combine(selected_date, start_time)
-    end_datetime = datetime.datetime.combine(selected_date, end_time)
     service_duration_td = datetime.timedelta(minutes=service.duracion)
 
-    while current_time + service_duration_td <= end_datetime:
-        candidate_end = current_time + service_duration_td
+    # Obtener citas existentes para el día y calcular sus intervalos
+    citas = Cita.objects.filter(date=selected_date)
+    booked_intervals = []
+    for cita in citas:
+        cita_inicio = datetime.datetime.combine(selected_date, cita.time)
+        cita_fin = cita_inicio + datetime.timedelta(minutes=cita.service.duracion)
+        booked_intervals.append((cita_inicio, cita_fin))
 
-        # Comprobar si el rango de horas se solapa con citas existentes
-        citas_ocupadas = any(
-            hora_ocupada >= current_time.time() and hora_ocupada < candidate_end.time()
-            for hora_ocupada in horarios_ocupados
+    # Obtener intervalos bloqueados por el admin
+    blocked_intervals = get_blocked_intervals(selected_date)
+
+    # Lista combinada de intervalos a evitar
+    intervals_to_avoid = booked_intervals + blocked_intervals
+
+    # Generar los horarios disponibles usando un paso fijo (5 minutos)
+    times = []
+    step_increment = datetime.timedelta(minutes=5)
+    candidate_start = datetime.datetime.combine(selected_date, start_time)
+    end_datetime = datetime.datetime.combine(selected_date, end_time)
+
+    while candidate_start + service_duration_td <= end_datetime:
+        candidate_end = candidate_start + service_duration_td
+
+        # Verificar solapamiento con cualquier intervalo ocupado
+        solapado = any(
+            candidate_start < interval_end and candidate_end > interval_start
+            for interval_start, interval_end in intervals_to_avoid
         )
-        # Comprobar solapamiento con bloqueos parciales
-        bloqueado = is_interval_blocked(current_time, candidate_end, blocked_intervals)
+        if not solapado:
+            times.append(candidate_start.time().strftime('%H:%M'))
 
-        if not citas_ocupadas and not bloqueado:
-            times.append(current_time.time().strftime('%H:%M'))
-
-        current_time += service_duration_td
+        candidate_start += step_increment
 
     return JsonResponse({'blocked': False, 'times': times})
+
 
 
 @staff_member_required
