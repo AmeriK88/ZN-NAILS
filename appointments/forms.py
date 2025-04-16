@@ -21,6 +21,13 @@ class AppointmentForm(forms.ModelForm):
         label=_("📅 Fecha")
     )
 
+    # VALIDACIÓN: no permitir sábados ni domingos
+    def clean_date(self):
+        date = self.cleaned_data.get('date')
+        if date and date.weekday() in (5, 6):  # 5 = sábado, 6 = domingo
+            raise forms.ValidationError(_("No se pueden reservar citas en fin de semana."))
+        return date
+
     time = forms.ChoiceField(
         widget=forms.Select(attrs={'class': 'form-select form-select-lg'}),
         label=_("⏰ Hora")
@@ -76,8 +83,7 @@ class AppointmentForm(forms.ModelForm):
 
         return times
 
-    
-      #  MÉTODO DE VALIDACIÓN DE LA HORA
+    # MÉTODO DE VALIDACIÓN DE LA HORA
     def clean_time(self):
         time = self.cleaned_data.get('time')
         service = self.cleaned_data.get('service')
