@@ -491,12 +491,6 @@ footer hr {
   display: inline-block;
 }
 
-/* Efecto “bounce” con transform */
-.animate-icon:hover {
-  animation: bounce 0.8s infinite alternate;
-}
-
-
 /* Odometer – número principal */
 .odometer {
   font-size: 2rem;

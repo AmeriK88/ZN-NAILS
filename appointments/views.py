@@ -38,7 +38,10 @@ def book_appointment(request):
             # Verificar si la fecha está bloqueada antes de hacer cualquier otra validación
             bloqueo = BloqueoFecha.objects.filter(fecha=fecha).first()
             if bloqueo:
-                messages.error(request, f"No puedes reservar en esta fecha ({fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️")
+                messages.error(
+                    request,
+                    f"No puedes reservar en esta fecha ({fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️"
+                )
                 return render(request, 'appointments/appointment_form.html', {'form': form})
 
             # Verificar disponibilidad horaria
@@ -51,8 +54,17 @@ def book_appointment(request):
                 return redirect('my_appointments')
             else:
                 messages.error(request, "La hora seleccionada se solapa con otra cita. Elige otro horario. ⚠️")
+                return render(request, 'appointments/appointment_form.html', {'form': form})
+
+        else:
+            # Mostrar mensajes de error cuando la validación del formulario falla
+            for field, errors in form.errors.items():
+                for err in errors:
+                    messages.error(request, err)
+            return render(request, 'appointments/appointment_form.html', {'form': form})
 
     return render(request, 'appointments/appointment_form.html', {'form': form})
+
 
 
 @login_required
@@ -72,21 +84,42 @@ def edit_appointment(request, appointment_id):
             # Verificar si la nueva fecha está bloqueada
             bloqueo = BloqueoFecha.objects.filter(fecha=nueva_fecha).first()
             if bloqueo:
-                messages.error(request, f" No puedes cambiar la cita a esta fecha ({nueva_fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️")
-                return render(request, 'appointments/appointment_form.html', {'form': form, 'appointment': cita})
+                messages.error(
+                    request,
+                    f"No puedes cambiar la cita a esta fecha ({nueva_fecha}), motivo: {bloqueo.motivo or 'Sin especificar'}. ⚠️"
+                )
+                return render(
+                    request,
+                    'appointments/appointment_form.html',
+                    {'form': form, 'appointment': cita}
+                )
 
             # Si la fecha es válida, actualizar la cita
             cita = form.save()
             enviar_notificacion_modificacion_cita(request.user.email, cita)
             messages.success(request, "¡Cita actualizada con éxito! Se ha enviado un correo de notificación. ✅")
             return redirect('my_appointments')
+        else:
+            # Mostrar mensajes de error cuando la validación del formulario falla
+            for field, errors in form.errors.items():
+                for err in errors:
+                    messages.error(request, err)
+            return render(
+                request,
+                'appointments/appointment_form.html',
+                {'form': form, 'appointment': cita}
+            )
 
     form = AppointmentForm(instance=cita)
-    return render(request, 'appointments/appointment_form.html', {
-        'form': form,
-        'appointment': cita,
-        'bloqueos': BloqueoFecha.objects.all()  
-    })
+    return render(
+        request,
+        'appointments/appointment_form.html',
+        {
+            'form': form,
+            'appointment': cita,
+            'bloqueos': BloqueoFecha.objects.all()
+        }
+    )
 
 
 @login_required
