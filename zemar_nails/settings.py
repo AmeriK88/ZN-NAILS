@@ -91,6 +91,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zemar_nails.wsgi.application'
 
+# Configuración de la base de datos
+DATABASES = {
+    'default': env.db(
+        'DATABASE_URL',
+        default=None,
+    )
+}
+
+if not DATABASES['default']:
+    raise ValueError("DATABASE_URL no está configurada en las variables de entorno")
+
+# Forzar el charset utf8mb4
+DATABASES['default']['OPTIONS'] = {
+    'charset': 'utf8mb4',
+    'init_command': "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'",
+}
+
+"""
 # DB config
 DATABASES = {
     'default': {
@@ -105,6 +123,7 @@ DATABASES = {
         },
     }
 }
+"""
 
 AUTH_PASSWORD_VALIDATORS = [
     {
