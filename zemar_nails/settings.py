@@ -143,13 +143,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessionid'
 
 
-# Error logs
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
+            'format': '[{asctime}] {levelname} {name} {message}',
             'style': '{',
         },
         'simple': {
@@ -158,53 +157,35 @@ LOGGING = {
         },
     },
     'handlers': {
-        # Handler para errores de correo electrónico
-        'email_file': {
-            'level': 'ERROR',
-            'filename': BASE_DIR / 'email_errors.log',
-            'formatter': 'verbose',
-        },
-        # Handler para errores generales
-        'general_file': {
-            'level': 'WARNING',
-            'filename': BASE_DIR / 'general_errors.log',
-            'formatter': 'verbose',
-        },
-        # Handler para errores críticos (500)
-        'critical_file': {
-            'level': 'CRITICAL',
-            'filename': BASE_DIR / 'critical_errors.log',
-            'formatter': 'verbose',
-        },
-        # Handler para consola (opcional, útil en desarrollo)
+        # Todo log va a consola: Railway lo captura en sus propios logs
         'console': {
-            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
+        # Envia correo a ADMINS si hay errores en peticiones HTTP (500)
+        'mail_admins': {
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
+            'level': 'ERROR',
+        },
     },
     'loggers': {
-        # Logger para errores específicos de correo electrónico
-        'django.core.mail': {
-            'handlers': ['email_file', 'console'],
+        # Captura errores de vistas y middlware (500)
+        'django.request': {
+            'handlers': ['console', 'mail_admins'],
             'level': 'ERROR',
             'propagate': False,
         },
-        # Logger para errores generales
+        # Mensajes generales de Django al nivel WARNING+
         'django': {
-            'handlers': ['general_file', 'console'],
+            'handlers': ['console'],
             'level': 'WARNING',
             'propagate': True,
         },
-        # Logger para errores críticos
-        'critical': {
-            'handlers': ['critical_file', 'console'],
-            'level': 'CRITICAL',
-            'propagate': True,
-        },
     },
+    # Logs de tu propia app (nivel INFO+)
     'root': {
-        'handlers': ['console', 'general_file'],
+        'handlers': ['console'],
         'level': 'INFO',
     },
 }
