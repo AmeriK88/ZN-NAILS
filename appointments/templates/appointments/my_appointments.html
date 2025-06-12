@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="container py-5">
+
     <!-- Título de la sección -->
     <div class="shadow text-center mb-5 p-3 border-0 bg-gradient">
         <h2 class="display-5 text-center mb-4">
@@ -17,7 +18,40 @@
     <div class="m-5 text-center">
         <a href="{% url 'update_profile' %}" class="btn btn-outline-dark">📝 Editar mi perfil</a>
     </div>
-    
+
+    <!-- Estadísticas de usuario -->
+    <div class="row mb-5 row-cols-1 row-cols-md-3 g-4 align-items-stretch">
+        <!-- Total Citas -->
+        <div class="col mb-3">
+            <div class="card h-100 shadow-sm text-center p-3">
+            <div class="card-body">
+                <i class="bi bi-calendar-check display-4 text-primary"></i>
+                <h5 class="card-title mt-2">Total de Citas</h5>
+                <p class="h3">{{ total_citas }}</p>
+            </div>
+            </div>
+        </div>
+        <!-- Dinero Gastado -->
+        <div class="col mb-3">
+            <div class="card h-100 shadow-sm text-center p-3">
+            <div class="card-body">
+                <i class="bi bi-cash-stack display-4 text-success"></i>
+                <h5 class="card-title mt-2">Dinero Gastado</h5>
+                <p class="h3">€{{ dinero_gastado }}</p>
+            </div>
+            </div>
+        </div>
+        <!-- Servicio Favorito -->
+        <div class="col mb-3">
+            <div class="card h-100 shadow-sm text-center p-3">
+            <div class="card-body">
+                <i class="bi bi-star display-4 text-warning"></i>
+                <h5 class="card-title mt-2">Servicio Favorito</h5>
+                <p class="h4">{{ servicio_favorito|default:"—" }}</p>
+            </div>
+            </div>
+        </div>
+    </div>
     
 
     {% if appointments %}

@@ -15,6 +15,9 @@ from .utils import verificar_disponibilidad
 from core.decorators import handle_exceptions
 from appointments.models import BloqueoFecha
 import datetime
+from django.utils import timezone
+from django.db.models import Q, Sum, Count
+
 
 
 @login_required
@@ -160,12 +163,42 @@ def confirm_delete_appointment(request, appointment_id):
 @handle_exceptions
 def my_appointments(request):
     """
-    Vista para mostrar las citas del usuario autenticado.
+    Vista para mostrar las citas futuras del usuario y estadísticas.
     """
-    appointments = Cita.objects.filter(user=request.user)
+    now = timezone.localtime()
+    today = now.date()
+    current_time = now.time()
+
+    # FILTRO citas activas (futuras o hoy que no han pasado)
+    appointments = Cita.objects.filter(user=request.user).filter(
+        Q(date__gt=today) | Q(date=today, time__gte=current_time)
+    ).order_by('date', 'time')
+
+    # ESTADÍSTICAS basadas en TODAS las citas del usuario
+    all_citas = Cita.objects.filter(user=request.user)
+
+    total_citas = all_citas.count()
+    dinero_gastado = all_citas.aggregate(total=Sum('service__precio'))['total'] or 0
+
+    # Servicio más reservado
+    top = (all_citas
+           .values('service__nombre')
+           .annotate(repeticiones=Count('service'))
+           .order_by('-repeticiones')
+           .first())
+    servicio_favorito = top['service__nombre'] if top else None
+
+    context = {
+        'appointments': appointments,
+        'total_citas': total_citas,
+        'dinero_gastado': dinero_gastado,
+        'servicio_favorito': servicio_favorito,
+    }
+
     if not appointments.exists():
         messages.info(request, "No tienes citas registradas.")
-    return render(request, 'appointments/my_appointments.html', {'appointments': appointments})
+
+    return render(request, 'appointments/my_appointments.html', context)
 
 
 @login_required
