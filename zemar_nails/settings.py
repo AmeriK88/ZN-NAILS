@@ -67,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'zemar_nails.urls'
@@ -160,21 +161,18 @@ LOGGING = {
         # Handler para errores de correo electrónico
         'email_file': {
             'level': 'ERROR',
-            'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'email_errors.log',
             'formatter': 'verbose',
         },
         # Handler para errores generales
         'general_file': {
             'level': 'WARNING',
-            'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'general_errors.log',
             'formatter': 'verbose',
         },
         # Handler para errores críticos (500)
         'critical_file': {
             'level': 'CRITICAL',
-            'class': 'logging.FileHandler',
             'filename': BASE_DIR / 'critical_errors.log',
             'formatter': 'verbose',
         },
@@ -255,6 +253,9 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
 # Message config
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
@@ -266,6 +267,18 @@ MESSAGE_TAGS = {
 
 # Config / for routes
 APPEND_SLASH = True
+
+# SSL Config
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE  = True
+CSRF_COOKIE_SECURE     = True
+SECURE_HSTS_SECONDS    = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD   = True
+
+
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
