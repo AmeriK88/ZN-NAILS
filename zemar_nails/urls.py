@@ -9,13 +9,15 @@ def health_check(request):
     return HttpResponse("OK")  # status 200
 
 urlpatterns = [
-    # Health-check simple para Railway en ruta única
+    # 1) Ruta raíz para que Railway reciba un 200 OK
+    path('', health_check, name='root_health'),
+    # 2) Health-check dedicado
     path('healthz/', health_check, name='health'),
-    # Cambio de idioma (no tocar)
+    # 3) Cambio de idioma
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
-# Ahora las URLs dentro del i18n_patterns
+# Ahora las URLs principales con i18n
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
