@@ -34,12 +34,9 @@ ENV PYTHONUNBUFFERED=1 \
 EXPOSE 8000
 
 
-# Ejecuta migraciones con --fake-initial, recoge estáticos y arranca Gunicorn
-CMD ["sh", "-c", "\
-    python manage.py migrate --fake-initial --noinput && \
-    python manage.py collectstatic --noinput && \
-    exec gunicorn zemar_nails.wsgi:application \
-      --bind 0.0.0.0:$PORT --workers 3 --log-file - \
-"]
+CMD ["sh","-c","exec gunicorn zemar_nails.wsgi:application \
+  --bind 0.0.0.0:$PORT --workers 3 \
+  --access-logfile - --log-level debug"]
+
 
 

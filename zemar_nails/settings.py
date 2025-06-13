@@ -6,9 +6,6 @@ import pymysql
 pymysql.install_as_MySQLdb()
 import os
 
-# Install PyMySQL as MySQLdb
-pymysql.install_as_MySQLdb()
-
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -66,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware', 
     'django.middleware.common.CommonMiddleware',
@@ -73,7 +71,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'zemar_nails.urls'
@@ -215,6 +212,12 @@ LOGGING = {
     },
 }
 
+# Forzar que el handler 'console' use el formateador 'verbose'
+LOGGING['handlers']['console']['formatter'] = 'verbose'
+
+# Asegurarte de que django.request solo loguea ERROR (y no INFO/WARNING)
+LOGGING['loggers']['django.request']['level'] = 'ERROR'
+
 
 # Email config
 EMAIL_BACKEND = env('EMAIL_BACKEND')  
@@ -264,9 +267,6 @@ MESSAGE_TAGS = {
 
 # Config / for routes
 APPEND_SLASH = True
-
-
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
