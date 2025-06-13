@@ -23,17 +23,18 @@ FROM python:3.13.1-slim
 
 WORKDIR /app
 
-# Copiar dependencias y código
-COPY --from=build /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+# Copiamos tanto los paquetes como los scripts (gunicorn, etc.)
+COPY --from=build /usr/local /usr/local
 COPY --from=build /app /app
 
 ENV PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=zemar_nails.settings
 
+# Usa el puerto que Railway inyecta
 EXPOSE 8000
 
 CMD ["sh", "-c", "\
-    python manage.py migrate && \
+    python manage.py migrate --noinput && \
     python manage.py collectstatic --noinput && \
-    gunicorn zemar_nails.wsgi:application --bind 0.0.0.0:8000 \
+    gunicorn zemar_nails.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --log-file - \
 "]
