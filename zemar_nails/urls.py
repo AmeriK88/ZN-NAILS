@@ -5,14 +5,14 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 from django.http import HttpResponse
 
-# Importa aquí tu vista de la home; ajusta la ruta si tu función o app tienen otro nombre
+# Importa tu vista de home real
 from core.views import home as home_view
 
 def root(request):
-    # Railway marca sus health‐checks con este header
-    if request.META.get('HTTP_X_RAILWAY_EDGE') is not None:
+    # Si es un HEAD (health-check de Railway), devolvemos OK
+    if request.method == 'HEAD':
         return HttpResponse("OK")
-    # Para cualquier otro request, devolvemos tu página principal
+    # Si es GET (o cualquier otro), renderizamos tu home de verdad
     return home_view(request)
 
 def health_check(request):
@@ -27,7 +27,7 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 
-# Ahora tus rutas principales bajo i18n_patterns (sin volver a declarar '')
+# El resto de tu app bajo i18n_patterns
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
@@ -35,7 +35,7 @@ urlpatterns += i18n_patterns(
     path('servicios/', include('services.urls')),
     path('reviews/', include('reviews.urls')),
     path('reports/', include('reports.urls')),
-    # Ya no hace falta: path('', include('core.urls')),
+    # ¡No vuelvas a poner path('', ...) aquí!
 )
 
 if settings.DEBUG:
