@@ -35,7 +35,7 @@ urlpatterns += i18n_patterns(
     path('servicios/', include('services.urls')),
     path('reviews/', include('reviews.urls')),
     path('reports/', include('reports.urls')),
-    # ¡No vuelvas a poner path('', ...) aquí!
+    path('', include('core.urls')),
 )
 
 if settings.DEBUG:

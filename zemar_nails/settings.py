@@ -103,6 +103,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zemar_nails.wsgi.application'
 
+
 # Configuración de la base de datos
 DATABASES = {
     'default': env.db(
