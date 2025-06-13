@@ -8,34 +8,27 @@ pymysql.install_as_MySQLdb()
 import ssl
 import os
 
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-if 'DEBUG' in os.environ:
-    del os.environ['DEBUG']
-
-ssl_context = ssl.create_default_context(cafile=certifi.where())
-
-SECURE_SSL_REDIRECT = False
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Initialize django environ
+# Inicializamos django-environ con los tipos adecuados
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+    CSRF_TRUSTED_ORIGINS=(list, []),
 )
 
-# Read .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# Carga el .env solo si estamos en DEBUG (evita sobreescribir vars de Railway)
+if env.bool("DEBUG"):
+    env.read_env(env_file=BASE_DIR / ".env")
 
-# Security key
-SECRET_KEY = env('SECRET_KEY')
+# Seguridad básica
+SECRET_KEY = env("SECRET_KEY")
+DEBUG = env.bool("DEBUG")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False) 
-print(DEBUG)
-
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+# Hosts y orígenes CSRF (filtra automáticamente listas vacías)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
 
 # App definitions
 INSTALLED_APPS = [

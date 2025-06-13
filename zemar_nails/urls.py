@@ -3,6 +3,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
+from django.http import HttpResponse
+
+def health_check(request):
+    return HttpResponse("OK") 
 
 urlpatterns = [
     # Ruta para el cambio de idioma
