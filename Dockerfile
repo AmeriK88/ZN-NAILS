@@ -40,6 +40,7 @@ ENV PYTHONUNBUFFERED=1 \
 # Railway inyecta el puerto correcto en $PORT (8080)
 EXPOSE 8080
 
+
 # Arranca Gunicorn
 CMD ["gunicorn", "zemar_nails.wsgi:application", \
      "--bind", "0.0.0.0:$PORT", \
