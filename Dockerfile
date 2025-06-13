@@ -33,11 +33,13 @@ ENV PYTHONUNBUFFERED=1 \
 # Usa el puerto que Railway inyecta
 EXPOSE 8000
 
-# … tu build y runtime stages previos …
+# … build y runtime stages que ya tenías …
 
-CMD ["sh", "-c", "\
+CMD ["sh","-c", "\
     python manage.py makemigrations --noinput && \
-    python manage.py migrate --noinput && \
+    python manage.py migrate --fake-initial --noinput && \
     python manage.py collectstatic --noinput && \
-    gunicorn zemar_nails.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --log-file - \
+    exec gunicorn zemar_nails.wsgi:application \
+      --bind 0.0.0.0:$PORT --workers 3 --log-file - \
 "]
+
