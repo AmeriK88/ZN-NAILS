@@ -9,25 +9,34 @@ import os
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialize django-environ
+# Inicializa django-environ (ya no pasamos ALLOWED_HOSTS/CSRF aquí)
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, []),
-    CSRF_TRUSTED_ORIGINS=(list, []),
 )
+
 
 # → Load .env immediately, **before** any env.bool/env.list
 env_file = BASE_DIR / ".env"
 if env_file.exists():
     env.read_env(env_file=env_file)
 
+
 # Now we can safely read DEBUG and all the rest
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 
 # Hosts and CSRF origins (lists)
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
+ALLOWED_HOSTS = [
+    "carla-marquez.up.railway.app",
+    "127.0.0.1",
+    "localhost",
+    "0.0.0.0",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://carla-marquez.up.railway.app",
+    "https://refactorizaci-n-cabigote-barber-production.up.railway.app",
+]
 
 # SSL / Proxy headers
 SECURE_SSL_REDIRECT = not DEBUG

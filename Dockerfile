@@ -34,9 +34,14 @@ ENV PYTHONUNBUFFERED=1 \
 EXPOSE 8000
 
 
-CMD ["sh","-c","exec gunicorn zemar_nails.wsgi:application \
-  --bind 0.0.0.0:$PORT --workers 3 \
-  --access-logfile - --log-level debug"]
+CMD ["sh", "-c", "\
+    exec gunicorn zemar_nails.wsgi:application \
+      --bind 0.0.0.0:$PORT \
+      --workers 3 \
+      --log-level debug \
+      --access-logfile - \
+"]
+
 
 
 
