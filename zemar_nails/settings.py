@@ -19,32 +19,28 @@ env = environ.Env(
     CSRF_TRUSTED_ORIGINS=(list, []),
 )
 
-# Load .env only in development
-def read_env():
-    env_file = BASE_DIR / '.env'
-    if env_file.exists():
-        env.read_env(env_file=env_file)
+# → Load .env immediately, **before** any env.bool/env.list
+env_file = BASE_DIR / ".env"
+if env_file.exists():
+    env.read_env(env_file=env_file)
 
-if env.bool('DEBUG'):
-    read_env()
-
-# Security settings
-SECRET_KEY = env("SECRET_KEY")
+# Now we can safely read DEBUG and all the rest
 DEBUG = env.bool("DEBUG")
+SECRET_KEY = env("SECRET_KEY")
 
-# Allowed hosts and CSRF
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+# Hosts and CSRF origins (lists)
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
 
-# SSL/Proxy headers
+# SSL / Proxy headers
 SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0
+SESSION_COOKIE_SECURE   = not DEBUG
+CSRF_COOKIE_SECURE      = not DEBUG
+SECURE_HSTS_SECONDS     = 3600 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD = not DEBUG
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
+SECURE_HSTS_PRELOAD     = not DEBUG
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST    = True
 
 
 # App definitions
