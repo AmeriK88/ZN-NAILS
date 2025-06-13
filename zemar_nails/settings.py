@@ -2,33 +2,45 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 from django.core.exceptions import ImproperlyConfigured
 import environ
-import certifi
 import pymysql
 pymysql.install_as_MySQLdb()
-import ssl
 import os
+
+# Install PyMySQL as MySQLdb
+pymysql.install_as_MySQLdb()
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Inicializamos django-environ con los tipos adecuados
+# Initialize django-environ
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, []),
-    CSRF_TRUSTED_ORIGINS=(list, []),
 )
 
-# Carga el .env solo si estamos en DEBUG (evita sobreescribir vars de Railway)
+# Load .env only in development
 if env.bool("DEBUG"):
     env.read_env(env_file=BASE_DIR / ".env")
 
-# Seguridad básica
+# Security settings
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 
-# Hosts y orígenes CSRF (filtra automáticamente listas vacías)
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
+# Allowed hosts
+ALLOWED_HOSTS = [
+    "zemar-nails-production.up.railway.app",
+    "127.0.0.1",
+    "localhost",
+]
+
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = [
+    "https://zemar-nails-production.up.railway.app",
+]
+
+# Proxy SSL header
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
 
 # App definitions
 INSTALLED_APPS = [
