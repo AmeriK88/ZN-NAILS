@@ -1,5 +1,7 @@
-# Aplica migraciones y recoge estáticos en cada deploy
-release: python manage.py migrate collectstatic --noinput
+# 1 Generar migraciones, migrar y recoger estáticos
+release: sh -c "python manage.py makemigrations --noinput \
+    && python manage.py migrate --noinput \
+    && python manage.py collectstatic --noinput"
 
-# Arranca Gunicorn apuntando a tu WSGI y escuchando en el puerto que Railway te da
-web: gunicorn zemar_nails.wsgi:application --bind 0.0.0.0:$PORT --log-file -
+# 2 Arrancar Gunicorn usando el puerto que Railway inyecta
+web: gunicorn zemar_nails.wsgi:application --bind 0.0.0.0:$PORT --workers 3 --log-file -
