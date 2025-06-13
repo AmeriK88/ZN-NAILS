@@ -51,6 +51,7 @@ USE_X_FORWARDED_HOST    = True
 
 # App definitions
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'admin_interface', 
     'colorfield', 
     'django.contrib.admin',
@@ -256,13 +257,20 @@ admins_env = env('ADMINS', default='')
 
 ADMINS = [tuple(admin.split(',')) for admin in admins_env.split(';')] if admins_env else []
 
-# Static files & config
+# Static files & WhiteNoise configuration
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']       # Tus carpetas de CSS/JS sin colectar
+STATIC_ROOT = BASE_DIR / 'staticfiles'        # Aquí cae collectstatic
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Opciones extra de WhiteNoise
+WHITENOISE_ROOT = STATIC_ROOT
+WHITENOISE_ALLOW_ALL_ORIGINS = True           # Permite CORS en tus assets
+WHITENOISE_AUTOREFRESH = DEBUG                # Recarga en desarrollo
+WHITENOISE_USE_FINDERS = DEBUG                 # Encuentra archivos en DEBUG
 
 
 # Message config
