@@ -35,7 +35,6 @@ ALLOWED_HOSTS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://carla-marquez.up.railway.app",
-    "https://refactorizaci-n-cabigote-barber-production.up.railway.app",
 ]
 
 # SSL / Proxy headers
