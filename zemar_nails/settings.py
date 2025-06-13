@@ -280,7 +280,6 @@ SECURE_HSTS_PRELOAD   = True
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
