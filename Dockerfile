@@ -12,7 +12,7 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY requirements.txt .  
 RUN python -m pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
@@ -24,15 +24,14 @@ FROM python:3.13.1-slim
 WORKDIR /app
 
 # Copiamos tanto los paquetes como los scripts (gunicorn, etc.)
-COPY --from=build /usr/local /usr/local
+COPY --from=build /usr/local /usr/local  
 COPY --from=build /app /app
 
 ENV PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=zemar_nails.settings
 
 # Usa el puerto que Railway inyecta
-EXPOSE 8000
-
+EXPOSE 8080
 
 CMD ["sh", "-c", "\
     exec gunicorn zemar_nails.wsgi:application \
@@ -41,7 +40,3 @@ CMD ["sh", "-c", "\
       --log-level debug \
       --access-logfile - \
 "]
-
-
-
-
