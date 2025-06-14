@@ -10,7 +10,7 @@
     <!-- Open Graph (Para Facebook, WhatsApp, LinkedIn) -->
     <meta property="og:title" content="Carla Márquez Nails - Belleza y Estilo">
     <meta property="og:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
-    <meta property="og:image" content="{% static 'imagenes/nail-logo-dark.png' %}">
+    <meta property="og:image" content="{% static 'imagenes/nail-logo.png' %}">
     <meta property="og:type" content="website">
 
     <!-- Twitter Card -->
@@ -20,6 +20,12 @@
     <meta name="twitter:image" content="{% static 'imagenes/nail-logo.png' %}">
     <!-- Manifest PWA (Android/Chrome) -->
     <link rel="manifest" href="{% static 'manifest.json' %}">
+    <!-- Para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" 
+        sizes="180x180" 
+        href="{% static 'icons/icon-192x192.png' %}" />
 
     <title>Carla Márquez Nails</title>
 
