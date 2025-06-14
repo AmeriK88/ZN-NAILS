@@ -7,7 +7,7 @@
   "theme_color": "#2b72ad",
   "icons": [
     {
-      "src": "/static/images/icons/nail-logo.png",
+      "src": "/static/images/icons/nail-logo-dark.png",
       "sizes": "192x192",
       "type": "image/png"
     }
