@@ -1,0 +1,13 @@
+{
+  "name": "Carla Márquez Nails",
+  "short_name": "CM Nails",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/static/images/icons/nail-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
