@@ -1,59 +1,70 @@
-{% load static %}
+{% load static i18n %}
+
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2b72adc0" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <!-- Open Graph (Para Facebook, WhatsApp, LinkedIn) -->
-    <meta property="og:title" content="Carla Márquez Nails - Belleza y Estilo">
-    <meta property="og:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
-    <meta property="og:image" content="{% static 'imagenes/nail-logo.png' %}">
-    <meta property="og:type" content="website">
+  <!-- Charset & Compatibility -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <!-- Meta para buscadores -->
-    <meta name="description" content="Carla Márquez Nails: ¡reserva tu cita en Arrecife y luce unas uñas espectaculares con nuestras promociones!">
+  <!-- Responsive Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Carla Márquez Nails - Belleza y Estilo">
-    <meta name="twitter:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
-    <meta name="twitter:image" content="{% static 'imagenes/nail-logo.png' %}">
-    <!-- Manifest PWA (Android/Chrome) -->
-    <link rel="manifest" href="{% static 'manifest.json' %}">
-    <!-- Para iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-icon" 
-        sizes="180x180" 
-        href="{% static 'icons/icon-192x192.png' %}" />
+  <!-- Theme Colors -->
+  <meta name="theme-color" content="#2b72adc0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="application-name" content="Carla Márquez Nails">
 
-    <title>Carla Márquez Nails</title>
+  <!-- SEO & Social -->
 
-    <!-- Fuente Poppins desde Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Carla Márquez Nails: ¡reserva tu cita en Arrecife y luce unas uñas espectaculares con nuestras promociones!">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Carla Márquez Nails - Belleza y Estilo">
+  <meta property="og:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
+  <meta property="og:image" content="{% static 'imagenes/nail-logo.png' %}">
 
-    <!-- Iconos de Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Carla Márquez Nails - Belleza y Estilo">
+  <meta name="twitter:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
+  <meta name="twitter:image" content="{% static 'imagenes/nail-logo.png' %}">
 
-    <!-- Iconos de Fontawesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
 
-    <!-- Estilos personalizados (deben ir DESPUÉS) -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- iOS PWA Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Carla Márquez Nails">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/icons/nail-logo.png' %}">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/icons/nail-logo.png' %}">
+  <title>Carla Márquez Nails</title>
 
-    <!-- Favicon -->
-    <link rel="icon"  href="{% static 'imagenes/favicon.ico' %}?v=2">
-    <link rel="icon" href="{% static 'imagenes/favicon.ico' %}?v=3">
-   
+  <!-- Preconnect & Preload for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" defer>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" defer>
+
+  <!-- CSS Libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" defer>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" defer>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" defer>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" defer>
+
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'imagenes/favicon.ico' %}?v=3" type="image/x-icon">
 </head>
 <body>    
     <!-- Barra Superior: Redes Sociales -->

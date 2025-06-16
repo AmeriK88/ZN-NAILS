@@ -1,20 +1,22 @@
 {
   "name": "Carla Márquez Nails",
   "short_name": "CM Nails",
-  "start_url": "/",
+  "description": "¡Reserva tu cita en Carla Márquez Nails y luce unas uñas espectaculares en Arrecife!",
+  "lang": "es-ES",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
   "background_color": "#1a1a1a",
   "theme_color": "#2b72ad",
+  "categories": ["business", "beauty", "lifestyle"],
   "icons": [
     {
       "src": "/static/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
-    },
-    {
-      "src": "/static/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
