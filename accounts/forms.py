@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
 
 
 #  FORMULARIO DE REGISTRO
@@ -54,6 +56,9 @@ class RegisterForm(UserCreationForm):
         }),
         label='Confirmar contraseña'
     )
+    # Añadimos captcha al registro
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+
 
     class Meta:
         model = User
@@ -73,7 +78,7 @@ class RegisterForm(UserCreationForm):
             raise forms.ValidationError('⚠️ Este nombre de usuario ya está en uso.')
         return username
 
-#  FORMULARIO DE INICIO DE SESIÓN
+#  FORMULARIO DE INICIO DE SESIÓN CON CAPTCHA
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
@@ -89,6 +94,7 @@ class LoginForm(AuthenticationForm):
         }),
         label='Contraseña'
     )
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
 
 #  FORMULARIO DE ACTUALIZACIÓN DE DATOS DE USUARIO
 class UpdateUserForm(forms.ModelForm):

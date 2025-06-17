@@ -6,6 +6,7 @@ import pymysql
 pymysql.install_as_MySQLdb()
 import os
 
+
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,10 +32,14 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "0.0.0.0",
+    "carlamarqueznails.com",
+    "www.carlamarqueznails.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://carla-marquez.up.railway.app",
+    "https://carlamarqueznails.com",
+    "https://www.carlamarqueznails.com",
 ]
 
 # SSL / Proxy headers
@@ -68,6 +73,9 @@ INSTALLED_APPS = [
     'reviews',
     'reports',
     'widget_tweaks',
+
+    # Capcha
+    'django_recaptcha', 
 ]
 
 MIDDLEWARE = [
@@ -272,6 +280,10 @@ WHITENOISE_ALLOW_ALL_ORIGINS = True           # Permite CORS en tus assets
 WHITENOISE_AUTOREFRESH = DEBUG                # Recarga en desarrollo
 WHITENOISE_USE_FINDERS = DEBUG                 # Encuentra archivos en DEBUG
 
+# Capcha config
+RECAPTCHA_PUBLIC_KEY  = env('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+NOCAPTCHA             = True  
 
 # Message config
 MESSAGE_TAGS = {
