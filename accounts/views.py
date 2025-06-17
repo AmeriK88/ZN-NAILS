@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
-from django.contrib.auth import login 
 from appointments.models import Cita  
 from core.decorators import handle_exceptions 
 from django.contrib.auth.decorators import login_required
@@ -64,33 +63,35 @@ def register_view(request):
 @csrf_protect
 def login_view(request):
     """
-    Procesa el POST de login. 
+    Procesa el POST de login.
     - En GET: instancia LoginForm vacío, show_login_modal=False.
-    - En POST: si válido, hace login y redirige; si inválido, show_login_modal=True y re-renderiza la plantilla con errores.
+    - En POST: si válido, hace login y redirige; si inválido, show_login_modal=True y re-renderiza con errores.
     """
     show_login_modal = False
-    # Creamos el formulario con datos POST si vienen, o vacío si GET
+    # Instancia LoginForm con datos POST o vacío
     login_form = LoginForm(request, data=request.POST or None)
+    # Preparamos también un RegisterForm vacío para el contexto, de modo que el modal de registro siga disponible en la plantilla
+    register_form = RegisterForm()
 
     if request.method == 'POST':
         if login_form.is_valid():
             user = login_form.get_user()
             auth_login(request, user)
             messages.success(request, f"¡Bienvenido de nuevo, {user.username}!")
-            # Intentar redirigir a 'next' si se proporcionó en el formulario, o a URL por defecto
+            # Si en el formulario viene un campo oculto 'next', redirige allí; si no, a la vista por defecto
             next_url = request.POST.get('next')
-            if next_url:
-                return redirect(next_url)
-            # Cambia 'home' por la vista a la que quieras ir tras login
-            return redirect('my_appointments')
+            return redirect(next_url or 'my_appointments')
         else:
             # Validación falló: abrimos el modal con errores
             show_login_modal = True
 
-    # En GET o POST inválido, re-renderizamos la plantilla base (por ejemplo home) con el form y flag
+    # En GET o POST inválido, renderiza la plantilla base (ej. home) con login_form (con o sin errores),
+    # register_form vacío, y flags adecuados para abrir o no modales.
     return render(request, 'core/home.html', {
-        'login_form': login_form,
-        'show_login_modal': show_login_modal,
+        'login_form':        login_form,
+        'register_form':     register_form,
+        'show_login_modal':  show_login_modal,
+        'show_register_modal': False,
     })
 
 
