@@ -300,6 +300,18 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# Lista negra de nombres de usuario prohibidos
+# Opción A: hardcodear
+BLACKLISTED_USERNAMES = [
+    "admin",
+    "root",
+    "superuser",
+    "administrator",
+    "test",
+    "staff",
+    "Cmarquez"
+]
+
 # Config / for routes
 APPEND_SLASH = True
 
