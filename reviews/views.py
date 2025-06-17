@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from .models import Reseña
 from .forms import ReviewForm
 
+
 def reviews_page(request):
-    reviews = Reseña.objects.all().order_by('-created_at')  # Mostrar reseñas más recientes
+    # Mostrar reseñas más recientes
+    reviews = Reseña.objects.all().order_by('-created_at')  
 
     # Manejo del formulario de reseñas
     if request.user.is_authenticated and request.method == 'POST':

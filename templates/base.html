@@ -68,14 +68,29 @@
 </head>
 <body>    
     <!-- Barra Superior: Redes Sociales -->
-    <div class="bg-light py-2 border-bottom">
+    <div class="bg-light py-2 border-bottom top-bar">
         <div class="container d-flex justify-content-between align-items-center">
-            <!-- Redes Sociales -->
-            <div>
-                <a href="https://www.facebook.com/" class="text-dark me-3"><i class="bi bi-facebook"></i></a>
-                <a href="https://www.instagram.com/zemar.nails/" class="text-dark me-3"><i class="bi bi-instagram"></i></a>
-                <a href="https://www.tiktok.com/" class="text-dark me-3"><i class="bi bi-tiktok"></i></a>
-                <a href="#" class="text-dark me-3"><i class="bi bi-pinterest"></i></a>
+            <!-- Redes Sociales mejoradas -->
+            <div class="d-flex align-items-center gap-3">
+            <!-- Booksy: alt descriptivo, aria-label en el enlace y tamaño aumentado -->
+            <a href="https://booksy.com/es-es/106848_carla-marquez_salon-de-unas_70206_arrecife?do=invite"
+                target="_blank"
+                class="d-inline-block"
+                aria-label="Reservar en Booksy">
+                <img
+                src="https://cdn.brandfetch.io/ida_K1rx9F/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1692814242668"
+                alt="Logo de Booksy"
+                style="width:3rem; height:3rem;"
+                >
+            </a>
+
+            <!-- Instagram: ícono oculto a lectores, aria-label en el enlace -->
+            <a href="https://www.instagram.com/carla.marqueznails/"
+                target="_blank"
+                class="text-dark fs-4"
+                aria-label="Visitar Instagram">
+                <i class="bi bi-instagram" aria-hidden="true"></i>
+            </a>
             </div>
             
             <!-- Info adicional con efecto máquina de escribir -->
@@ -265,8 +280,7 @@
             <div class="col">
               <h5 id="contacto" class="text-uppercase">Contacto</h5>
               <p><i class="bi bi-geo-alt-fill me-2"></i>Arrecife, Lanzarote</p>
-              <p><i class="bi bi-telephone-fill me-2"></i>+34 600 123 456</p>
-              <p><i class="bi bi-envelope-fill me-2"></i>info@carlamarquez.com</p>
+              <p><i class="bi bi-envelope-fill me-2"></i>carlamarqueznailstudio@gmail.com</p>
             </div>
 
             <!-- Ubicación -->
@@ -310,22 +324,29 @@
       
             <!-- Redes sociales -->
             <div class="col">
-              <h5 class="text-uppercase">Síguenos</h5>
-              <div class="d-flex justify-content-center justify-content-md-start gap-3">
-                <a href="https://www.instagram.com/zemar.nails/" target="_blank" class="text-light fs-4">
-                  <i class="bi bi-instagram"></i>
-                </a>
-                <a href="https://www.facebook.com/" target="_blank" class="text-light fs-4">
-                  <i class="bi bi-facebook"></i>
-                </a>
-                <a href="https://www.tiktok.com/" target="_blank" class="text-light fs-4">
-                  <i class="bi bi-tiktok"></i>
-                </a>
-                <a href="https://www.pinterest.com/" target="_blank" class="text-light fs-4">
-                  <i class="bi bi-pinterest"></i>
-                </a>
-              </div>
-            </div>
+                <h5 class="text-uppercase text-light">Síguenos</h5>
+                <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/zemar.nails/"
+                    target="_blank"
+                    class="text-light fs-4"
+                    aria-label="Visitar Instagram">
+                    <i class="bi bi-instagram" aria-hidden="true"></i>
+                    </a>
+                    <!-- Booksy -->
+                    <a href="http://carlamarquez.booksy.com/h/"
+                    target="_blank"
+                    class="d-inline-block"
+                    aria-label="Reservar en Booksy">
+                    <img
+                        src="https://cdn.brandfetch.io/ida_K1rx9F/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1692814242668"
+                        alt="Logo de Booksy"
+                        class="booksy-icon"
+                        style="width:3rem; height:3rem;"
+                    >
+                    </a>
+                </div>
+                </div>
           </div>
       
           <!-- Visit Counter -->
@@ -338,21 +359,17 @@
           </div>  
       
           <hr class="border-light">
-        <div class="text-center small">
-            <p class="mb-0">&copy; {{ current_year }} Carla Márquez Nails. Todos los derechos reservados.</p>
-            <p class="mb-0">
-                Diseñado y desarrollado <i class="bi bi-code-slash text-info"></i> por 
-                <strong>
-                <a href="https://josefe.eu.pythonanywhere.com/" target="_blank" class="text-decoration-none text-info">JFGC</a>
-                </strong>
-            </p>
-        </div>
-
-      
+            <div class="text-center small">
+                <p class="mb-0">&copy; {{ current_year }} Carla Márquez Nails. Todos los derechos reservados.</p>
+                <p class="mb-0">
+                    Diseñado y desarrollado <i class="bi bi-code-slash text-info"></i> por 
+                    <strong>
+                    <a href="https://josefe.eu.pythonanywhere.com/" target="_blank" class="text-decoration-none text-info">JFGC</a>
+                    </strong>
+                </p>
+            </div>
         </div>
       </footer>
-               
-
     <!-- Scripts -->
     <script>
         {% if show_login_modal %}

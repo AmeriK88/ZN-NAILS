@@ -108,12 +108,15 @@ main::before {
   background-position: center;
   background-attachment: scroll;
   background-repeat: no-repeat;
-
   opacity: 0.1;
   filter: brightness(0.85) contrast(1.5);
   z-index: -1;
 }
 
+.top-bar {
+  position: relative;
+  z-index: 1031; 
+}
 
 /* El contenido del <main> debe estar por encima del fondo */
 main {
@@ -464,6 +467,11 @@ footer .bi {
 
 footer .bi:hover {
   transform: scale(1.2);
+}
+
+footer a img.booksy-icon {
+  /* primero convierto todo a negro puro, luego invierto a blanco */
+  filter: brightness(0) invert(1);
 }
 
 footer hr {
