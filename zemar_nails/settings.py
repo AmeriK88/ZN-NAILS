@@ -53,6 +53,10 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST    = True
 
 
+# Dominio canónico: usado por el middleware
+CANONICAL_HOST = 'carlamarqueznails.com'
+
+
 # App definitions
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -105,6 +109,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.mensaje_especial_context',
+                'accounts.context_processors.auth_forms', # Inyecta formularios de autenticación
             ],
         },
     },

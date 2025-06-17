@@ -13,82 +13,84 @@ from datetime import date
 def register_view(request):
     """
     Procesa POST de registro:
-    - En GET: muestra home con register_form vacío y login_form vacío.
-    - En POST con datos inválidos: re-renderiza home con register_form con errores y show_register_modal=True.
-    - En registro exitoso: crea usuario, lo autentica, redirige.
+    - GET: instancia RegisterForm vacío, show_register_modal=False.
+    - POST inválido: show_register_modal=True y re-renderiza la plantilla con errores.
+    - POST válido: crea usuario, lo autentica y redirige (por ejemplo a home o next).
     """
     show_register_modal = False
-    # Prepara un LoginForm vacío para que el contexto siempre tenga login_form
+    # Mantener un LoginForm vacío en contexto para que el modal de login también exista
     login_form = LoginForm()
 
     if request.method == 'POST':
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
-            # Guardar el usuario
+            # Crear el usuario a partir del formulario
             user = register_form.save(commit=False)
-            # Asignar first_name, last_name, email si tu formulario los incluye:
+            # Si tu formulario incluye first_name/last_name/email, asignarlos:
             user.first_name = register_form.cleaned_data.get('first_name', '')
             user.last_name  = register_form.cleaned_data.get('last_name', '')
             user.email      = register_form.cleaned_data.get('email', '')
             user.save()
 
-            # Autenticación automática tras registro
+            # Autenticación automática
             username = register_form.cleaned_data.get('username')
             password = register_form.cleaned_data.get('password1')
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
                 messages.success(request, f"¡Bienvenido/a {user.username}! Tu cuenta ha sido creada e iniciada sesión con éxito.")
-                return redirect('home')
+                # Puedes usar un campo hidden 'next' en el formulario si quieres redirigir a la página origen:
+                next_url = request.POST.get('next')
+                if next_url:
+                    return redirect(next_url)
+                return redirect('home')  # o la ruta que estimes apropiada
             else:
                 messages.error(request, "Hubo un problema al iniciar sesión automáticamente. Intenta iniciar sesión manualmente.")
                 return redirect('login')
         else:
-            # Errores en registro: reabrir modal
+            # Si hay errores, abrir modal de registro
             show_register_modal = True
     else:
         register_form = RegisterForm()
 
-    # Renderiza la home con ambos formularios y flags
+    # Renderiza la plantilla (por ejemplo home) con ambos formularios y flags
     return render(request, 'core/home.html', {
-        'register_form':     register_form,
-        'login_form':        login_form,
+        'register_form':      register_form,
+        'login_form':         login_form,
         'show_register_modal': show_register_modal,
-        'show_login_modal':   False,
+        'show_login_modal':    False,  
     })
 
 @csrf_protect
 def login_view(request):
     """
-    Procesa POST de login. 
-    - Si GET o POST sin datos, muestra home con login_form vacío.
-    - Si POST con errores, re-renderiza home con login_form que incluye errores y show_login_modal=True.
+    Procesa el POST de login. 
+    - En GET: instancia LoginForm vacío, show_login_modal=False.
+    - En POST: si válido, hace login y redirige; si inválido, show_login_modal=True y re-renderiza la plantilla con errores.
     """
     show_login_modal = False
-    # Prepara un formulario de registro vacío para el contexto (el modal de registro puede estar disponible)
-    register_form = RegisterForm()
+    # Creamos el formulario con datos POST si vienen, o vacío si GET
+    login_form = LoginForm(request, data=request.POST or None)
 
     if request.method == 'POST':
-        login_form = LoginForm(request, data=request.POST)
         if login_form.is_valid():
             user = login_form.get_user()
             auth_login(request, user)
             messages.success(request, f"¡Bienvenido de nuevo, {user.username}!")
-            # Redirige a la página que desees tras login exitoso
+            # Intentar redirigir a 'next' si se proporcionó en el formulario, o a URL por defecto
+            next_url = request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
+            # Cambia 'home' por la vista a la que quieras ir tras login
             return redirect('my_appointments')
         else:
-            # Hay errores en el login: reabrir modal
+            # Validación falló: abrimos el modal con errores
             show_login_modal = True
-    else:
-        # GET: formulario vacío
-        login_form = LoginForm()
 
-    # Renderizamos la home pasando login_form (posible con errores), register_form vacío, y flags
+    # En GET o POST inválido, re-renderizamos la plantilla base (por ejemplo home) con el form y flag
     return render(request, 'core/home.html', {
         'login_form': login_form,
-        'register_form': register_form,
         'show_login_modal': show_login_modal,
-        'show_register_modal': False,
     })
 
 
