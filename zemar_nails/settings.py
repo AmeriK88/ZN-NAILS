@@ -43,7 +43,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # SSL / Proxy headers
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE   = not DEBUG
 CSRF_COOKIE_SECURE      = not DEBUG
 SECURE_HSTS_SECONDS     = 3600 if not DEBUG else 0
@@ -80,6 +80,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'core.middleware.custom_redirection_middleware.CustomRedirectionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware', 
