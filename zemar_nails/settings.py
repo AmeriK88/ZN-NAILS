@@ -10,21 +10,61 @@ import os
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Inicializa django-environ (ya no pasamos ALLOWED_HOSTS/CSRF aquí)
-env = environ.Env(
-    DEBUG=(bool, False),
-)
+# Inicializa django-environ
+env = environ.Env()
+
+# → Load .env immediately: preferimos .env.development en local, si existe; si no, fallback a .env
+# Puedes controlar con una variable de sistema ENV_FILE si lo deseas, pero aquí es fijo:
+env_dev = BASE_DIR / ".env.development"
+if env_dev.exists():
+    env.read_env(env_file=env_dev)
+else:
+    env_file = BASE_DIR / ".env"
+    if env_file.exists():
+        env.read_env(env_file=env_file)
+
+# Definir DEBUG una sola vez, usando DJANGO_DEBUG o ENVIRONMENT
+DJANGO_DEBUG = env.bool("DJANGO_DEBUG", default=None)
+ENVIRONMENT = env("ENVIRONMENT", default="development")
+if DJANGO_DEBUG is not None:
+    DEBUG = DJANGO_DEBUG
+else:
+    DEBUG = (ENVIRONMENT == "development")
+
+print(f"ENVIRONMENT={ENVIRONMENT}, DJANGO_DEBUG={DJANGO_DEBUG}, DEBUG en settings: {DEBUG}")
 
 
-# → Load .env immediately, **before** any env.bool/env.list
-env_file = BASE_DIR / ".env"
-if env_file.exists():
-    env.read_env(env_file=env_file)
-
-
-# Now we can safely read DEBUG and all the rest
-DEBUG = env.bool("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
+
+# (Aquí seguirían el resto de settings, p.ej. SECRET_KEY, ALLOWED_HOSTS, etc.)
+
+# SSL / Proxy headers y ajustes de seguridad en función de DEBUG:
+if DEBUG:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+    SECURE_PROXY_SSL_HEADER = None
+    USE_X_FORWARDED_HOST = False
+else:
+    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)
+    SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=True)
+    CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=True)
+    SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=3600)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
+    SECURE_HSTS_PRELOAD = env.bool("SECURE_HSTS_PRELOAD", default=True)
+    if env.bool("USE_PROXY_SSL_HEADER", default=True):
+        SECURE_PROXY_SSL_HEADER = (
+            "HTTP_X_FORWARDED_PROTO",
+            env("PROXY_SSL_PROTO_VALUE", default="https")
+        )
+    else:
+        SECURE_PROXY_SSL_HEADER = None
+    USE_X_FORWARDED_HOST = env.bool("USE_X_FORWARDED_HOST", default=True)
+
+
 
 # Hosts and CSRF origins (lists)
 ALLOWED_HOSTS = [
@@ -40,17 +80,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://carla-marquez.up.railway.app",
     "https://carlamarqueznails.com",
     "https://www.carlamarqueznails.com",
+    "http://127.0.0.1:8000",
 ]
 
-# SSL / Proxy headers
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE   = not DEBUG
-CSRF_COOKIE_SECURE      = not DEBUG
-SECURE_HSTS_SECONDS     = 3600 if not DEBUG else 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD     = not DEBUG
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-USE_X_FORWARDED_HOST    = True
 
 
 # Dominio canónico: usado por el middleware
@@ -77,8 +109,6 @@ INSTALLED_APPS = [
     'reviews',
     'reports',
     'widget_tweaks',
-
-    # Capcha
     'django_recaptcha', 
 ]
 
@@ -117,7 +147,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zemar_nails.wsgi.application'
 
-
+"""
 # Configuración de la base de datos
 DATABASES = {
     'default': env.db(
@@ -150,7 +180,9 @@ DATABASES = {
         },
     }
 }
-"""
+
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -276,15 +308,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']       # Tus carpetas de CSS/JS sin colectar
-STATIC_ROOT = BASE_DIR / 'staticfiles'        # Aquí cae collectstatic
+STATICFILES_DIRS = [BASE_DIR / 'static']    
+STATIC_ROOT = BASE_DIR / 'staticfiles'    
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Opciones extra de WhiteNoise
 WHITENOISE_ROOT = STATIC_ROOT
-WHITENOISE_ALLOW_ALL_ORIGINS = True           # Permite CORS en tus assets
-WHITENOISE_AUTOREFRESH = DEBUG                # Recarga en desarrollo
-WHITENOISE_USE_FINDERS = DEBUG                 # Encuentra archivos en DEBUG
+WHITENOISE_ALLOW_ALL_ORIGINS = True      
+WHITENOISE_AUTOREFRESH = DEBUG      
+WHITENOISE_USE_FINDERS = DEBUG              
 
 # Capcha config
 RECAPTCHA_PUBLIC_KEY  = env('RECAPTCHA_PUBLIC_KEY')
@@ -301,7 +333,6 @@ MESSAGE_TAGS = {
 }
 
 # Lista negra de nombres de usuario prohibidos
-# Opción A: hardcodear
 BLACKLISTED_USERNAMES = [
     "admin",
     "root",

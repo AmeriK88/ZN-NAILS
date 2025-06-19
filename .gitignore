@@ -2,6 +2,8 @@
 venv/
 .env
 *.env
+# development variables
+.env.development
 
 # Archivos de configuración y seguridad
 *.pyc
@@ -35,3 +37,5 @@ staticfiles/
 
 # Sensitive data
 client_secret_2_146331858045-stoidghapph09hg2h4fnliuheiels23b.apps.googleusercontent.com.json
+
+
