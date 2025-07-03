@@ -15,7 +15,6 @@ env = environ.Env(
     DEBUG=(bool, False),
 )
 
-
 # → Load .env immediately, **before** any env.bool/env.list
 env_file = BASE_DIR / ".env"
 if env_file.exists():
@@ -40,13 +39,14 @@ CSRF_TRUSTED_ORIGINS = [
     "https://carla-marquez.up.railway.app",
     "https://carlamarqueznails.com",
     "https://www.carlamarqueznails.com",
+    "http://127.0.0.1",
 ]
 
 # SSL / Proxy headers
 SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE   = not DEBUG
 CSRF_COOKIE_SECURE      = not DEBUG
-SECURE_HSTS_SECONDS     = 3600 if not DEBUG else 0
+SECURE_HSTS_SECONDS = 60 * 60 * 24 * 30 if not DEBUG else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
 SECURE_HSTS_PRELOAD     = not DEBUG
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -239,7 +239,7 @@ LOGGING = {
 # Forzar que el handler 'console' use el formateador 'verbose'
 LOGGING['handlers']['console']['formatter'] = 'verbose'
 
-# Asegurarte de que django.request solo loguea ERROR (y no INFO/WARNING)
+# Loguea ERROR (y no INFO/WARNING)
 LOGGING['loggers']['django.request']['level'] = 'ERROR'
 
 
@@ -276,15 +276,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']       # Tus carpetas de CSS/JS sin colectar
-STATIC_ROOT = BASE_DIR / 'staticfiles'        # Aquí cae collectstatic
+STATICFILES_DIRS = [BASE_DIR / 'static']     
+STATIC_ROOT = BASE_DIR / 'staticfiles'  
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Opciones extra de WhiteNoise
 WHITENOISE_ROOT = STATIC_ROOT
-WHITENOISE_ALLOW_ALL_ORIGINS = True           # Permite CORS en tus assets
-WHITENOISE_AUTOREFRESH = DEBUG                # Recarga en desarrollo
-WHITENOISE_USE_FINDERS = DEBUG                 # Encuentra archivos en DEBUG
+WHITENOISE_ALLOW_ALL_ORIGINS = True    
+WHITENOISE_AUTOREFRESH = DEBUG             
+WHITENOISE_USE_FINDERS = DEBUG         
 
 # Capcha config
 RECAPTCHA_PUBLIC_KEY  = env('RECAPTCHA_PUBLIC_KEY')
@@ -301,7 +301,6 @@ MESSAGE_TAGS = {
 }
 
 # Lista negra de nombres de usuario prohibidos
-# Opción A: hardcodear
 BLACKLISTED_USERNAMES = [
     "admin",
     "root",
