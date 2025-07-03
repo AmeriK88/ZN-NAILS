@@ -1,7 +1,8 @@
 ########################
 # 1) Build stage
 ########################
-FROM python:3.13-slim-bookworm AS builder
+FROM python:3.13.5-slim-bookworm AS builder
+
 
 # Dependencias de compilación (solo aquí)
 RUN apt-get update && \
@@ -25,13 +26,14 @@ COPY . .
 ########################
 # 2) Runtime stage
 ########################
-FROM python:3.13-slim-bookworm
+FROM python:3.13.5-slim-bookworm AS runtime
+
 
 # Parcheamos el sistema
 RUN apt-get update && \
+    apt-get install -y --no-install-recommends libmariadb3 && \
     apt-get upgrade -y --no-install-recommends && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instalamos dependencias ya compiladas
 COPY --from=builder /wheels /wheels
