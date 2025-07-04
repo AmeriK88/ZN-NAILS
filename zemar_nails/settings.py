@@ -32,13 +32,11 @@ if DJANGO_DEBUG is not None:
     DEBUG = DJANGO_DEBUG
 else:
     DEBUG = (ENVIRONMENT == "development")
+if DEBUG:
+    print(f"ENVIRONMENT={ENVIRONMENT}, DJANGO_DEBUG={DJANGO_DEBUG}, DEBUG={DEBUG}")
 
-print(f"ENVIRONMENT={ENVIRONMENT}, DJANGO_DEBUG={DJANGO_DEBUG}, DEBUG en settings: {DEBUG}")
-
-
+# Secret key: obligatorio en producción
 SECRET_KEY = env("SECRET_KEY")
-
-# (Aquí seguirían el resto de settings, p.ej. SECRET_KEY, ALLOWED_HOSTS, etc.)
 
 # SSL / Proxy headers y ajustes de seguridad en función de DEBUG:
 if DEBUG:
@@ -84,15 +82,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.carlamarqueznails.com",
 ]
 
-# SSL / Proxy headers
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE   = not DEBUG
-CSRF_COOKIE_SECURE      = not DEBUG
-SECURE_HSTS_SECONDS     = 3600 if not DEBUG else 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
-SECURE_HSTS_PRELOAD     = not DEBUG
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-USE_X_FORWARDED_HOST    = True
 
 
 # Dominio canónico: usado por el middleware
