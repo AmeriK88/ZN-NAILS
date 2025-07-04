@@ -10,8 +10,11 @@ import os
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Inicializa django-environ
-env = environ.Env()
+# Inicializa django-environ (ya no pasamos ALLOWED_HOSTS/CSRF aquí)
+env = environ.Env(
+    DEBUG=(bool, False),
+)
+
 
 # → Load .env immediately: preferimos .env.development en local, si existe; si no, fallback a .env
 # Puedes controlar con una variable de sistema ENV_FILE si lo deseas, pero aquí es fijo:
@@ -80,9 +83,17 @@ CSRF_TRUSTED_ORIGINS = [
     "https://carla-marquez.up.railway.app",
     "https://carlamarqueznails.com",
     "https://www.carlamarqueznails.com",
-    "http://127.0.0.1:8000",
 ]
 
+# SSL / Proxy headers
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE   = not DEBUG
+CSRF_COOKIE_SECURE      = not DEBUG
+SECURE_HSTS_SECONDS     = 3600 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD     = not DEBUG
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST    = True
 
 
 # Dominio canónico: usado por el middleware
@@ -271,7 +282,7 @@ LOGGING = {
 # Forzar que el handler 'console' use el formateador 'verbose'
 LOGGING['handlers']['console']['formatter'] = 'verbose'
 
-# Asegurarte de que django.request solo loguea ERROR (y no INFO/WARNING)
+# Loguea ERROR (y no INFO/WARNING)
 LOGGING['loggers']['django.request']['level'] = 'ERROR'
 
 
@@ -308,15 +319,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']    
-STATIC_ROOT = BASE_DIR / 'staticfiles'    
+STATICFILES_DIRS = [BASE_DIR / 'static']       # Tus carpetas de CSS/JS sin colectar
+STATIC_ROOT = BASE_DIR / 'staticfiles'        # Aquí cae collectstatic
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Opciones extra de WhiteNoise
 WHITENOISE_ROOT = STATIC_ROOT
-WHITENOISE_ALLOW_ALL_ORIGINS = True      
-WHITENOISE_AUTOREFRESH = DEBUG      
-WHITENOISE_USE_FINDERS = DEBUG              
+WHITENOISE_ALLOW_ALL_ORIGINS = True           # Permite CORS en tus assets
+WHITENOISE_AUTOREFRESH = DEBUG                # Recarga en desarrollo
+WHITENOISE_USE_FINDERS = DEBUG                 # Encuentra archivos en DEBUG
 
 # Capcha config
 RECAPTCHA_PUBLIC_KEY  = env('RECAPTCHA_PUBLIC_KEY')

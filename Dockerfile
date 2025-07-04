@@ -1,45 +1,59 @@
-# 1) Build stage: instalar dependencias
-FROM python:3.13.1-slim AS build
+########################
+# 1) Build stage
+########################
+FROM python:3.13.5-slim-bookworm AS builder
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-       build-essential \
-       default-libmysqlclient-dev \
-       pkg-config \
-       libmariadb-dev-compat \
-       libmariadb-dev \
-    && rm -rf /var/lib/apt/lists/*
+
+# Dependencias de compilación (solo aquí)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        default-libmysqlclient-dev \
+        pkg-config \
+        libmariadb-dev-compat \
+        libmariadb-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+
+# Compilamos wheels offline para copiar solo binarios
+RUN pip install --upgrade pip && \
+    pip wheel --no-cache-dir --no-deps -r requirements.txt -w /wheels
 
 COPY . .
 
-# 2) Runtime stage: sólo lo imprescindible
-FROM python:3.13.1-slim
+########################
+# 2) Runtime stage
+########################
+FROM python:3.13.5-slim-bookworm AS runtime
 
+
+# Parcheamos el sistema
+RUN apt-get update && \
+    apt-get dist-upgrade -y --no-install-recommends && \
+    apt-get install -y --no-install-recommends libmariadb3 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instalamos dependencias ya compiladas
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
+
+# Copiamos el código
+COPY --from=builder /app /app
 WORKDIR /app
-
-# Copia paquetes y proyecto
-COPY --from=build /usr/local /usr/local
-COPY --from=build /app /app
 
 ENV PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=zemar_nails.settings
 
-# Railway inyecta el puerto correcto en $PORT (8080)
 EXPOSE 8080
 
-# Antes de arrancar Gunicorn, migramos y recogemos estáticos
 CMD ["sh", "-c", "\
     python manage.py migrate --noinput && \
     python manage.py collectstatic --noinput && \
     exec gunicorn zemar_nails.wsgi:application \
-      --bind 0.0.0.0:$PORT \
+      --bind 0.0.0.0:${PORT:-8080} \
       --workers 3 \
-      --log-level debug \
+      --log-level info \
       --access-logfile - \
 "]

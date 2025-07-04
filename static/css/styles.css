@@ -389,6 +389,14 @@ main {
   box-shadow: 0 6px 16px var(--color-imagen-hover);
 }
 
+.card-img-top {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* o 1 / 1 para cuadrado */
+  object-fit: cover;
+}
+
+
+
 /* Estilo para los detalles de la cita */
 .detail-box {
   background-color: var(--color-fondo-detalle);
