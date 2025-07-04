@@ -4,7 +4,6 @@ from django.core.exceptions import ImproperlyConfigured
 import environ
 import pymysql
 pymysql.install_as_MySQLdb()
-import os
 
 
 # Base directory
