@@ -34,6 +34,7 @@ dist/
 
 # Archivos estáticos generados
 staticfiles/
+media/
 
 # Sensitive data
 client_secret_2_146331858045-stoidghapph09hg2h4fnliuheiels23b.apps.googleusercontent.com.json
