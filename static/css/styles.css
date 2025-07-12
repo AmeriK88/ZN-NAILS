@@ -82,10 +82,7 @@
   --transicion-suave: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-html, body {
-  overflow-x: hidden; /* Oculta el scroll lateral */
-  width: 100%;
-}
+html, body { overflow-x: hidden;  width: 100%;}
 
 /*  Estilo general */
 body {
@@ -113,27 +110,14 @@ main::before {
   z-index: -1;
 }
 
-.top-bar {
-  position: relative;
-  z-index: 1031; 
-}
+.top-bar { position: relative; z-index: 1031;}
 
 /* El contenido del <main> debe estar por encima del fondo */
-main {
-  position: relative;
-  z-index: 1;
-}
+main { position: relative; z-index: 1;}
 
+.card { animation: slideIn 0.8s ease-in-out; transition: transform 0.3s ease, box-shadow 0.3s ease;} 
 
-.card {
-  animation: slideIn 0.8s ease-in-out;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-} 
-
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
+.card:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);}
 
 /* Texto degradado animado */
 .animated-text {
@@ -145,17 +129,10 @@ main {
 }
 
 /* Estado inicial (antes de aparecer) */
-.fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out;}
 
 /* Estado final (cuando aparece) */
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.fade-in.visible {opacity: 1; transform: translateY(0);}
 
 /* Botones de Autenticación */
 #loginBtn, .btn-outline-dark, .btn-dark, .nav-item {
@@ -192,10 +169,7 @@ main {
   transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.alert {
-  opacity: 0;
-  animation: fadeIn 0.6s ease-in-out forwards;
-}
+.alert {opacity: 0; animation: fadeIn 0.6s ease-in-out forwards;}
 
 /* Spinner */
 .loader-container {
@@ -214,10 +188,7 @@ main {
   transition: visibility 0.3s, opacity 0.3s; 
 }
 
-.loader-container.show {
-  visibility: visible;
-  opacity: 1;
-}
+.loader-container.show { visibility: visible; opacity: 1;}
 
 .loader {
   width: 50px;
@@ -228,17 +199,12 @@ main {
   animation: spin 1s linear infinite; 
 }
 
-.modal {
-  z-index: 9999;
-}
+.modal {z-index: 9999;}
+body.modal-open { padding-right: 0 !important; }
 
 /*  Transiciones suaves en campos de formulario */
 .form-control,
-.form-select {
-  transition: all 0.3s ease-in-out;
-  border-radius: 0.5rem;
-  box-shadow: none;
-}
+.form-select { transition: all 0.3s ease-in-out; border-radius: 0.5rem; box-shadow: none;}
 
 .form-control:focus,
 .form-select:focus {
@@ -271,15 +237,9 @@ main {
   border: none;
 }
 
-.btn-reservar:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
-}
+.btn-reservar:hover { transform: scale(1.1); box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);}
 
-.btn-reservar:active {
-  transform: scale(1);
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.2);
-}
+.btn-reservar:active { transform: scale(1); box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.2);}
 
 /* Botón del menú con efecto hover */
 .navbar-toggler {
@@ -296,11 +256,7 @@ main {
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
 }
 
-.navbar-toggler:hover {
-  background-color: var(--color-hover);
-  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.2);
-  transform: scale(1.1); 
-}
+.navbar-toggler:hover { background-color: var(--color-hover); box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.2); transform: scale(1.1); }
 
 /* Estilo principal para el logo */
 .navbar-brand img {
@@ -312,10 +268,7 @@ main {
 }
 
 /* Efecto al pasar el cursor */
-.navbar-brand img:hover {
-  transform: scale(1.1); 
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.3)); 
-}
+.navbar-brand img:hover { transform: scale(1.1);  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.3)); }
 
 /* Efecto máquina de escribir mejorado */
 .typing-effect  {
@@ -345,17 +298,9 @@ main {
   animation: fadeInUp 1.2s ease-out;
 }
 
-.banner-slogan h2 {
-  font-size: var(--fuente-grande);
-  color: var(--color-secundario);
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
-}
+.banner-slogan h2 { font-size: var(--fuente-grande); color: var(--color-secundario); text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);}
 
-.banner-slogan p {
-  font-size: var(--fuente-mediana);
-  color: var(--color-secundario);
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
-}
+.banner-slogan p { font-size: var(--fuente-mediana); color: var(--color-secundario); text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);}
 
 /* Botón de Reserva */
 .btn-reservar {
@@ -368,10 +313,7 @@ main {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.btn-reservar:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
-}
+.btn-reservar:hover { transform: scale(1.1); box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);}
 
 /* Mejora de imagen en Mis Citas */
 .custom-img {
@@ -394,7 +336,6 @@ main {
   aspect-ratio: 16 / 9; /* o 1 / 1 para cuadrado */
   object-fit: cover;
 }
-
 
 
 /* Estilo para los detalles de la cita */

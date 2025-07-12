@@ -2,7 +2,10 @@
 venv/
 .env
 *.env
+<<<<<<< HEAD
 # development variables
+=======
+>>>>>>> main
 .env.development
 
 # Archivos de configuración y seguridad
