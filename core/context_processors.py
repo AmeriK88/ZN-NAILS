@@ -10,7 +10,7 @@ def mensaje_especial_context(request):
     - contador_actualizado: visitas almacenadas
     - header_message: texto corto y creativo para mostrar en el encabezado
     """
-    hoy = timezone.now().date()
+    hoy = timezone.localdate()
     
     # Mensaje especial (si aplica)
     mensaje = MensajeEspecial.objects.filter(
@@ -21,7 +21,7 @@ def mensaje_especial_context(request):
         Q(fecha_fin__gte=hoy) | Q(fecha_fin__isnull=True)
     ).order_by('-fecha_inicio', '-id').first()
 
-    # Contador de visitas (si usas; igual puedes mantenerlo o eliminarlo si ya no lo necesitas aquí)
+    # Contador de visitas 
     try:
         contador = ContadorVisitas.objects.get(pk=1)
         visitas = contador.total
