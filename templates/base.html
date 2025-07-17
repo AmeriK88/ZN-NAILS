@@ -33,6 +33,9 @@
   <meta name="twitter:title" content="Carla Márquez Nails - Belleza y Estilo">
   <meta name="twitter:description" content="¡Reserva tu cita y luce unas uñas espectaculares!">
   <meta name="twitter:image" content="{% static 'imagenes/nail-logo.png' %}">
+  
+    <!-- App Version -->
+  <meta name="app-version" content="{{ app_version }}">
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="{% static 'manifest.json' %}">
@@ -366,6 +369,10 @@
                     </strong>
                 </p>
             </div>
+            <div>
+                v{{ app_version }}
+            </div>
+            
         </div>
       </footer>
     <!-- Scripts -->

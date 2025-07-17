@@ -2,6 +2,7 @@ import random
 from django.utils import timezone
 from django.db.models import Q
 from .models import MensajeEspecial, ContadorVisitas
+from django.conf import settings
 
 def mensaje_especial_context(request):
     """
@@ -46,4 +47,5 @@ def mensaje_especial_context(request):
         'special_message': mensaje,
         'contador_actualizado': visitas,
         'header_message': header_message,
+        'app_version': settings.APP_VERSION, 
     }

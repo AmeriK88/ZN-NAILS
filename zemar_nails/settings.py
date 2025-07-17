@@ -19,15 +19,15 @@ env = environ.Env(
 # Puedes controlar con una variable de sistema ENV_FILE si lo deseas, pero aquí es fijo:
 env_dev = BASE_DIR / ".env.development"
 if env_dev.exists():
-    env.read_env(env_file=env_dev)
+    env.read_env(env_file=str(env_dev))
 else:
     env_file = BASE_DIR / ".env"
     if env_file.exists():
-        env.read_env(env_file=env_file)
+        env.read_env(env_file=str(env_file))
 
 # Definir DEBUG una sola vez, usando DJANGO_DEBUG o ENVIRONMENT
 DJANGO_DEBUG = env.bool("DJANGO_DEBUG", default=None)
-ENVIRONMENT = env("ENVIRONMENT", default="development")
+ENVIRONMENT = env("ENVIRONMENT", default=".env.development")
 if DJANGO_DEBUG is not None:
     DEBUG = DJANGO_DEBUG
 else:
@@ -81,7 +81,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://carlamarqueznails.com",
     "https://www.carlamarqueznails.com",
 ]
-
 
 
 # Dominio canónico: usado por el middleware
@@ -146,7 +145,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zemar_nails.wsgi.application'
 
-
+"""
 # Configuración de la base de datos
 DATABASES = {
     'default': env.db(
@@ -179,7 +178,7 @@ DATABASES = {
         },
     }
 }
-"""
+
 
 
 
@@ -311,7 +310,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']       # Tus carpetas de CSS/JS sin cole
 STATIC_ROOT = BASE_DIR / 'staticfiles'        # Aquí cae collectstatic
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Opciones extra de WhiteNoise
+# WhiteNoise settings
 WHITENOISE_ROOT = STATIC_ROOT
 WHITENOISE_ALLOW_ALL_ORIGINS = True           # Permite CORS en tus assets
 WHITENOISE_AUTOREFRESH = DEBUG                # Recarga en desarrollo
@@ -331,7 +330,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# Lista negra de nombres de usuario prohibidos
+#  Blacklisted usernames
 BLACKLISTED_USERNAMES = [
     "admin",
     "root",
@@ -345,6 +344,8 @@ BLACKLISTED_USERNAMES = [
 # Config / for routes
 APPEND_SLASH = True
 
+# App version
+APP_VERSION = env("APP_VERSION", default="0.1.0")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
